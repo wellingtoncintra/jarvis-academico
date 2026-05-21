@@ -1,0 +1,26 @@
+# ─── LLM e Agente ────────────────────────────────────────────────────────────
+langchain==0.3.25
+langchain-community==0.3.23
+langchain-core==0.3.59
+openai==1.82.0               # cliente compatível com APIs no formato OpenAI (Gemma via token do professor)
+
+# ─── RAG ─────────────────────────────────────────────────────────────────────
+chromadb==0.6.3              # vector store local
+sentence-transformers==4.1.0 # embeddings (all-MiniLM-L6-v2, roda offline)
+pypdf==5.4.0                 # leitura de PDFs
+tiktoken==0.9.0              # contagem de tokens para chunking
+
+# ─── Banco de dados ───────────────────────────────────────────────────────────
+# sqlite3 já vem no Python, sem necessidade de instalar
+
+# ─── Interface ───────────────────────────────────────────────────────────────
+streamlit==1.45.1
+
+# ─── Utilitários ─────────────────────────────────────────────────────────────
+python-dotenv==1.1.0         # carregar variáveis de ambiente (.env)
+pydantic==2.11.4             # validação de dados
+loguru==0.7.3                # logs elegantes
+pytest==8.3.5                # testes
+
+# ─── Opcional / Diferencial ───────────────────────────────────────────────────
+# plotly==5.22.0             # gráficos de desempenho do aluno (bônus)
