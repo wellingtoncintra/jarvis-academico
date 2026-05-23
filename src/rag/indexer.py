@@ -15,9 +15,10 @@ import argparse
 from pathlib import Path
 from loguru import logger
 
-from .loader  import carregar_todos_pdfs, pdf_para_markdown, salvar_markdown
-from .chunker import chunkar_documento, estatisticas
-from .embedder import construir_indices, salvar_indices, adicionar_chunks
+#from .loader  import carregar_todos_pdfs, pdf_para_markdown, salvar_markdown
+from loader import carregar_todos_pdfs, pdf_para_markdown, salvar_markdown
+from chunker import chunkar_documento, estatisticas
+from embedder import construir_indices, salvar_indices, adicionar_chunks
 
 
 def indexar_pasta(pasta: str = "data/raw") -> None:
