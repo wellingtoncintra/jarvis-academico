@@ -1,47 +1,48 @@
 """
 src/agent.py
 
-Orquestrador do JARVIS — implementa o loop de tool calling:
+Orquestrador do JARVIS usando a Responses API.
 
-    usuário → agente → LLM
-                        ↓ "chame tool X"
-              agente → tool X → resultado
-                        ↓
-              agente → LLM + resultado
-                        ↓ resposta final
-    usuário ← agente
+Nota: A documentação do professor indica chat.completions, porém esse endpoint
+não aceita tool calling no vLLM sem --enable-auto-tool-choice e
+--tool-call-parser. A Responses API suporta tools nativamente no servidor
+disponibilizado e foi adotada por isso.
 
-O loop roda até a LLM devolver uma mensagem de texto sem tool calls,
-ou até atingir MAX_ITERACOES (proteção contra loops infinitos).
+Loop:
+    1. Envia input_list + tools para client.responses.create
+    2. Itera response.output buscando itens type="function_call"
+    3. Executa cada tool e devolve como "function_call_output"
+    4. Repete até não haver function_calls
+    5. Retorna response.output_text ao usuário
 """
 
 import json
-from loguru import logger
-
-from src.llm.client import get_llm_client
-from src.tools import TOOLS, executar_tool
-
 import os
+from loguru import logger
 from dotenv import load_dotenv
+
+from src.llm.client import get_llm_client, get_model_name
+from src.tools import TOOLS_DEF, executar_tool
 
 load_dotenv()
 
-MAX_ITERACOES = 5  # proteção contra loop infinito
+MAX_ITERACOES = 5
 
-SYSTEM_PROMPT = """Você é o JARVIS Acadêmico, um assistente pessoal para estudantes universitários.
+SYSTEM_PROMPT = """\
+Você é o JARVIS Acadêmico, um assistente pessoal para estudantes universitários.
 
 Você tem acesso a ferramentas para:
-- Consultar e adicionar eventos na agenda
+- Consultar e adicionar eventos na agenda acadêmica
 - Gerenciar lista de tarefas (listar, adicionar, concluir)
 - Buscar conteúdo nos materiais de estudo indexados (RAG)
-- Montar planos de estudo combinando agenda e tarefas
+- Montar planos de estudo combinando agenda, tarefas e materiais
 
 Diretrizes:
-- Sempre use as ferramentas disponíveis antes de responder perguntas sobre agenda, tarefas ou materiais.
-- Quando o usuário pedir para adicionar algo, use a tool adequada e confirme o que foi feito.
-- Para planos de estudo, chame 'planejar_estudos' para obter o contexto e depois elabore o plano.
+- Sempre use as ferramentas antes de responder sobre agenda, tarefas ou materiais.
+- Quando adicionar algo, confirme ao usuário o que foi cadastrado.
+- Para planos de estudo, chame planejar_estudos primeiro e elabore o plano com o contexto.
 - Responda sempre em português brasileiro, de forma clara e objetiva.
-- Se uma ferramenta retornar erro, explique ao usuário o que aconteceu e sugira uma alternativa.
+- Se uma ferramenta retornar erro, explique e sugira alternativa.
 """
 
 
@@ -50,70 +51,57 @@ def processar_mensagem(
     historico: list[dict] = None,
 ) -> dict:
     """
-    Processa uma mensagem do usuário com suporte a tool calling.
+    Processa uma mensagem do usuário com tool calling via Responses API.
 
     Parâmetros:
-        mensagem  : texto enviado pelo usuário
-        historico : lista de mensagens anteriores no formato OpenAI
-                    [{"role": "user"|"assistant", "content": "..."}]
-                    Opcional — se None, começa uma conversa nova.
+        mensagem  : texto do usuário
+        historico : mensagens anteriores [{"role": "user"|"assistant", "content": str}]
+                    Se None, inicia conversa nova.
 
     Retorna:
         {
-            "resposta":   str,          ← texto final para o usuário
-            "tool_logs":  list[dict],   ← registro de todas as tools chamadas
-            "historico":  list[dict],   ← histórico atualizado (para próxima chamada)
+            "resposta":   str,         — texto final para o usuário
+            "tool_logs":  list[dict],  — cada tool chamada com args, resultado e status
+            "historico":  list[dict],  — histórico atualizado para a próxima chamada
         }
     """
     client = get_llm_client()
-    model  = os.getenv("LLM_MODEL_NAME")
+    model  = get_model_name()
 
-    # ── Monta o histórico inicial ─────────────────────────────────────────────
     if historico is None:
         historico = []
 
-    mensagens = (
-        [{"role": "system", "content": SYSTEM_PROMPT}]
-        + historico
-        + [{"role": "user", "content": mensagem}]
-    )
+    # input_list acumula tudo entre iterações: histórico + mensagem + outputs de tools
+    input_list = historico + [{"role": "user", "content": mensagem}]
 
-    tool_logs  = []
-    iteracoes  = 0
+    tool_logs = []
+    iteracoes = 0
 
-    # ── Loop principal ────────────────────────────────────────────────────────
     while iteracoes < MAX_ITERACOES:
         iteracoes += 1
-        logger.info(f"[agente] Iteração {iteracoes} — enviando {len(mensagens)} mensagens")
+        logger.info(f"[agente] Iteração {iteracoes} — {len(input_list)} itens no input")
 
-        try:
-            response = client.chat.completions.create(
-                model=model,
-                messages=mensagens,
-                tools=TOOLS,
-                # Sem tool_choice — deixa o servidor usar o padrão dele
-            )
-        except Exception as e:
-                logger.warning(f"{e}")
-                response = client.chat.completions.create(
-                    model=model,
-                    messages=mensagens,
-                )
+        response = client.responses.create(
+            model=model,
+            instructions=SYSTEM_PROMPT,
+            tools=TOOLS_DEF,
+            input=input_list,
+        )
 
-        choice  = response.choices[0]
-        message = choice.message
+        # Acumula os outputs desta rodada para a próxima iteração
+        input_list += response.output
 
-        # ── Resposta final (sem tool call) ────────────────────────────────────
-        if choice.finish_reason == "stop" or not message.tool_calls:
-            resposta = message.content or ""
+        function_calls = [item for item in response.output if item.type == "function_call"]
+
+        # ── Sem tool calls → resposta final ──────────────────────────────────
+        if not function_calls:
+            resposta = response.output_text
             logger.info(f"[agente] Resposta final: {len(resposta)} caracteres")
 
-            # Atualiza historico com o par usuário/assistente
-            historico_atualizado = (
-                historico
-                + [{"role": "user",      "content": mensagem}]
-                + [{"role": "assistant", "content": resposta}]
-            )
+            historico_atualizado = historico + [
+                {"role": "user",      "content": mensagem},
+                {"role": "assistant", "content": resposta},
+            ]
 
             return {
                 "resposta":  resposta,
@@ -121,44 +109,39 @@ def processar_mensagem(
                 "historico": historico_atualizado,
             }
 
-        # ── A LLM pediu tool calls ────────────────────────────────────────────
-        # Adiciona a mensagem do assistente (com tool_calls) ao contexto
-        mensagens.append(message)
+        # ── Executa cada tool call ────────────────────────────────────────────
+        for item in function_calls:
+            nome = item.name
+            args = item.arguments  # string JSON
 
-        for tc in message.tool_calls:
-            nome      = tc.function.name
-            args_json = tc.function.arguments
+            logger.info(f"[agente] Tool: {nome} | args: {args}")
 
-            logger.info(f"[agente] Tool chamada: {nome} | args: {args_json}")
-
-            # Executa a tool
             try:
-                resultado = executar_tool(nome, args_json)
+                resultado = executar_tool(nome, args)
                 status    = "ok"
             except Exception as e:
                 resultado = {"erro": str(e)}
                 status    = "erro"
-                logger.error(f"[agente] Erro na tool {nome}: {e}")
+                logger.error(f"[agente] Erro na tool '{nome}': {e}")
 
-            # Registra o log
             tool_logs.append({
                 "tool":      nome,
-                "args":      json.loads(args_json) if isinstance(args_json, str) else args_json,
+                "args":      json.loads(args) if isinstance(args, str) else args,
                 "resultado": resultado,
                 "status":    status,
             })
 
-            # Devolve resultado para a LLM no próximo turno
-            mensagens.append({
-                "role":         "tool",
-                "tool_call_id": tc.id,
-                "content":      json.dumps(resultado, ensure_ascii=False),
+            # Devolve resultado no formato da Responses API
+            input_list.append({
+                "type":    "function_call_output",
+                "call_id": item.call_id,
+                "output":  json.dumps(resultado, ensure_ascii=False),
             })
 
-    # ── Segurança: limite de iterações atingido ───────────────────────────────
-    logger.warning("[agente] Limite de iterações atingido sem resposta final.")
+    # ── Proteção: limite atingido ─────────────────────────────────────────────
+    logger.warning("[agente] Limite de iterações atingido.")
     return {
-        "resposta":  "Não consegui processar sua solicitação completamente. Por favor, tente reformular.",
+        "resposta":  "Não consegui processar completamente. Tente reformular a pergunta.",
         "tool_logs": tool_logs,
         "historico": historico + [{"role": "user", "content": mensagem}],
     }

@@ -1,30 +1,25 @@
 """
 src/tools/__init__.py
 
-Exporta todas as tools prontas para o agente consumir.
-
-Uso no agent.py:
-    from src.tools import TOOLS_DEF, executar_tool
+Exporta TOOLS_DEF no formato Responses API e o dispatcher executar_tool.
 """
 
-from .agenda import CONSULTAR_AGENDA, consultar_agenda
-from .agenda import ADICIONAR_AGENDA, adicionar_agenda
-from .tarefas import GERENCIAR_TAREFAS, gerenciar_tarefas
-from .rag import BUSCAR_MATERIAL_RAG, buscar_material_rag
-from .planejamento import PLANEJAR_ESTUDOS, planejar_estudos
+from .agenda       import CONSULTAR_AGENDA_DEF,    consultar_agenda
+from .agenda       import ADICIONAR_AGENDA_DEF,    adicionar_agenda
+from .tarefas      import GERENCIAR_TAREFAS_DEF,   gerenciar_tarefas
+from .rag          import BUSCAR_MATERIAL_RAG_DEF,  buscar_material_rag
+from .planejamento import PLANEJAR_ESTUDOS_DEF,    planejar_estudos
 
 import json
 
-# Lista de schemas enviada à LLM no parâmetro `tools`
-TOOLS = [
-    CONSULTAR_AGENDA,
-    ADICIONAR_AGENDA,
-    GERENCIAR_TAREFAS,
-    BUSCAR_MATERIAL_RAG,
-    PLANEJAR_ESTUDOS,
+TOOLS_DEF = [
+    CONSULTAR_AGENDA_DEF,
+    ADICIONAR_AGENDA_DEF,
+    GERENCIAR_TAREFAS_DEF,
+    BUSCAR_MATERIAL_RAG_DEF,
+    PLANEJAR_ESTUDOS_DEF,
 ]
 
-# Mapa nome → função Python
 _REGISTRY = {
     "consultar_agenda":    consultar_agenda,
     "adicionar_agenda":    adicionar_agenda,
@@ -34,23 +29,14 @@ _REGISTRY = {
 }
 
 
-def executar_tool(nome: str, argumentos_json: str) -> dict:
+def executar_tool(nome: str, argumentos) -> dict:
     """
-    Recebe o nome da tool e os argumentos como JSON string
-    (formato retornado pela OpenAI API) e executa a função correspondente.
-
-    Retorna o resultado como dicionário.
-    Levanta ValueError se o nome não for reconhecido.
-
-    Uso:
-        resultado = executar_tool("gerenciar_tarefas", '{"acao": "listar_pendentes"}')
+    Executa a tool pelo nome.
+    `argumentos` pode ser dict ou JSON string
+    (a Responses API retorna item.arguments como string).
     """
     fn = _REGISTRY.get(nome)
     if fn is None:
-        raise ValueError(
-            f"Tool '{nome}' não encontrada. "
-            f"Disponíveis: {list(_REGISTRY.keys())}"
-        )
-
-    args = json.loads(argumentos_json) if isinstance(argumentos_json, str) else argumentos_json
+        raise ValueError(f"Tool '{nome}' não encontrada. Disponíveis: {list(_REGISTRY.keys())}")
+    args = json.loads(argumentos) if isinstance(argumentos, str) else argumentos
     return fn(**args)
