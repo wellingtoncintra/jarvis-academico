@@ -140,4 +140,4 @@ Os resultados da avaliação do sistema estão em `evaluation/eval.json`, com 10
 ## 👥 Integrantes
 
 - Cézar Dias Martins
-- Wellington Cintra da Silva
+- Wellington Cintra da Silva 

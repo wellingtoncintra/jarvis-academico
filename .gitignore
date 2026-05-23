@@ -2,6 +2,7 @@
 venv/
 .venv/
 env/
+.streamlit/
 
 # Variáveis de ambiente (NUNCA commitar o .env real)
 .env
@@ -28,3 +29,10 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+
+# Outros
+
+tests/
+test.py
+test2.py
