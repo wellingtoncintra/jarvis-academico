@@ -1,0 +1,11 @@
+[
+  {
+    "titulo": "Limpar casa ",
+    "materia": "Home",
+    "prioridade": "Média",
+    "prazo": "2026-05-23",
+    "descricao": "lavar banheiro, dar banho no cachorro e lavar roupa.",
+    "concluida": false,
+    "criada_em": "2026-05-22"
+  }
+]
