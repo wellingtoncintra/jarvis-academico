@@ -6,5 +6,21 @@
     "hora": "",
     "descricao": "Entrega do trabalho de IA.",
     "local": ""
+  },
+  {
+    "titulo": "teste",
+    "tipo": "Aula",
+    "data": "2026-05-24",
+    "hora": "01:00",
+    "descricao": "",
+    "local": ""
+  },
+  {
+    "titulo": "teste 2",
+    "tipo": "Aula",
+    "data": "2026-05-24",
+    "hora": "13:00",
+    "descricao": "",
+    "local": ""
   }
 ]

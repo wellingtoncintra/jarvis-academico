@@ -82,22 +82,26 @@ Coloque seus PDFs e textos na pasta `data/raw/`.
 
 ## 🚀 Execução
 
+### Indexar novos documentos
+
+```bash
+python src/rag/indexer.py
+# ou
+python -m src.rag.indexer
+```
+
 ### Interface completa (Streamlit)
 
 ```bash
-streamlit run interface/app.py
+streamlit run app.py
 ```
 
 ### Somente via terminal (modo chat)
 
 ```bash
 python src/agent.py
-```
-
-### Indexar novos documentos
-
-```bash
-python src/rag/indexer.py
+# ou
+python -m src.agent
 ```
 
 ---

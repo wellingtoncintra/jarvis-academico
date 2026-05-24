@@ -32,7 +32,7 @@ def _save(data: list):
 
 
 def render():
-    st.markdown("# 📅 Agenda Acadêmica")
+    st.markdown("# Agenda Acadêmica")
     agenda = _load()
 
     tab_vis, tab_add = st.tabs(["📋 Visualizar", "➕ Adicionar evento"])

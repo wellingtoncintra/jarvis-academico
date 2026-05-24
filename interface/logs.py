@@ -6,7 +6,7 @@ import datetime
 
 
 def render():
-    st.markdown("# 🔧 Logs & Avaliação")
+    st.markdown("# Logs & Avaliação")
 
     tab_logs, tab_eval, tab_erros = st.tabs([
         "📋 Tool Call Logs", "📊 Avaliação (10 perguntas)", "🐛 Análise de Erros"

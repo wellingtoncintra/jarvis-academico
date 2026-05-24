@@ -23,7 +23,7 @@ def _save(data: list):
 
 
 def render():
-    st.markdown("# ✅ Lista de Tarefas")
+    st.markdown("# Lista de Tarefas")
     tarefas = _load()
 
     pendentes  = [t for t in tarefas if not t.get("concluida")]

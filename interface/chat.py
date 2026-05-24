@@ -7,8 +7,14 @@ tool calling e exibe logs de ferramentas em tempo real.
 import streamlit as st
 from src.agent import processar_mensagem
 
+import base64
+import streamlit as st
+
+with open("img/chat.png", "rb") as f:
+    img_base64 = base64.b64encode(f.read()).decode()
+
 def render():
-    st.markdown("# 💬 Chat com JARVIS")
+    st.markdown("# Chat com JARVIS")
     st.caption("Faça perguntas sobre seus materiais, agenda, tarefas ou peça um plano de estudos.")
 
 
@@ -19,7 +25,7 @@ def render():
 
     # ── Tool sidebar ─────────────────────────────────────────────────────────
     with col_tools:
-        st.markdown("### 🔧 Ferramentas")
+        st.markdown("### Ferramentas")
         st.caption("Chamadas realizadas nesta sessão")
 
         if not st.session_state.tool_logs:
@@ -52,13 +58,19 @@ def render():
             if not st.session_state.messages:
                 st.markdown("""
                 <div style="text-align:center;color:#64748b;margin-top:80px;">
-                    <div style="font-size:2.5rem;">🎓</div>
                     <div style="font-size:1.1rem;margin-top:8px;">Olá! Sou o JARVIS.</div>
                     <div style="font-size:.9rem;margin-top:4px;">
                         Pergunte sobre seus materiais, agenda ou tarefas.
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
+                st.markdown(
+                f"""
+                    <div style="display: flex; justify-content: center; align-items: center; margin-top:20px;">
+                        <img src="data:image/png;base64,{img_base64}" width="40">
+                    </div>
+                """, unsafe_allow_html=True)
+
             else:
                 for msg in st.session_state.messages:
                     if msg["role"] == "user":
@@ -79,7 +91,7 @@ def render():
 
         # ── Input row ─────────────────────────────────────────────────────────
         with st.container():
-            inp_col, btn_col, clr_col = st.columns([6, 1, 1])
+            inp_col, btn_col, clr_col = st.columns([4, 1, 1])
             with inp_col:
                 user_input = st.text_input(
                     "Mensagem",

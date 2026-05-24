@@ -2,7 +2,7 @@ import streamlit as st
 
 st.set_page_config(
     page_title="JARVIS Acadêmico",
-    page_icon="🎓",
+    page_icon="img/logo.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -16,11 +16,13 @@ st.markdown("""
     --bg:       #0d0f14;
     --surface:  #13161e;
     --border:   #1e2330;
-    --accent:   #4f8ef7;
+    --accent:   #286bde;
     --accent2:  #a78bfa;
     --success:  #34d399;
     --warning:  #fbbf24;
     --danger:   #f87171;
+    --accent-hover: #4f8ef7;
+    --accent-active: #075df2;
     --text:     #e2e8f0;
     --muted:    #64748b;
     --mono:     'Space Mono', monospace;
@@ -46,14 +48,28 @@ section[data-testid="stSidebar"] * { color: var(--text) !important; }
 /* Buttons */
 .stButton > button {
     background: var(--accent);
-    color: #fff;
+    color: #fff !important;
     border: none;
     border-radius: 8px;
     font-family: var(--sans);
     font-weight: 600;
-    transition: opacity .2s;
+    transition: background .2s, transform .15s;
 }
-.stButton > button:hover { opacity: .85; }
+.stButton > button:hover,
+.stButton > button:focus,
+.stButton > button:focus-visible {
+    background: var(--accent-hover) !important;
+    color: #fff !important;
+}
+.stButton > button:active {
+    background: var(--accent-active) !important;
+    color: #fff !important;
+    transform: translateY(1px);
+}
+.stButton > button[disabled] {
+    opacity: .6;
+    cursor: not-allowed;
+}
 
 /* Text inputs */
 .stTextInput > div > div > input,
@@ -140,6 +156,19 @@ h2 { font-size: 1.3rem; color: var(--accent); }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.e1q5ojhd0 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.et0utro0 {
+    display: none;
+}
+[data-testid="stMainBlockContainer"] {
+    padding-top: 0 !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -158,16 +187,24 @@ for k, v in defaults.items():
 
 # ── Sidebar nav ───────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## 🎓 JARVIS Acadêmico")
+    st.markdown("""
+        <style>
+        .st-emotion-cache-7czcpc > img {
+            margin-top: -54px;
+            margin-bottom: -24px;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+    st.image("img/logo.png", width=180)
     st.markdown("---")
 
     pages = {
-        "💬 Chat":          "chat",
-        "📅 Agenda":        "agenda",
-        "✅ Tarefas":       "tarefas",
-        "📚 Materiais RAG": "rag",
-        "📊 Planejamento":  "plan",
-        "🔧 Logs":          "logs",
+        "Chat":          "chat",
+        "Agenda":        "agenda",
+        "Tarefas":       "tarefas",
+        "Materiais RAG": "rag",
+        "Planejamento":  "plan",
+        "Logs":          "logs",
     }
     for label, key in pages.items():
         active = st.session_state.active_page == key

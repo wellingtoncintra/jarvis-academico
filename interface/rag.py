@@ -8,7 +8,7 @@ UPLOAD_DIR = Path("data/docs")
 
 
 def render():
-    st.markdown("# 📚 Materiais de Estudo (RAG)")
+    st.markdown("# Materiais de Estudo (RAG)")
     st.caption("Carregue PDFs ou textos para consultar via linguagem natural no Chat.")
 
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)

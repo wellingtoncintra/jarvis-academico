@@ -21,7 +21,7 @@ def _load_agenda():
 
 
 def render():
-    st.markdown("# 📊 Planejamento de Estudos")
+    st.markdown("# Planejamento de Estudos")
     st.caption("Combine agenda, tarefas e materiais para gerar planos e exercícios de revisão.")
 
     tab_plano, tab_recall, tab_exercicios = st.tabs([
