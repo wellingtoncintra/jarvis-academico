@@ -70,7 +70,12 @@ pip install -r requirements.txt
 ### 4. Configure as variáveis de ambiente
 
 ```bash
+# Linux/Mac
 cp .env.example .env
+
+# Windows
+copy env.example .env
+
 # Edite o .env com o token e URL fornecidos pelo professor
 ```
 
