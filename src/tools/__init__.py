@@ -39,4 +39,5 @@ def executar_tool(nome: str, argumentos) -> dict:
     if fn is None:
         raise ValueError(f"Tool '{nome}' não encontrada. Disponíveis: {list(_REGISTRY.keys())}")
     args = json.loads(argumentos) if isinstance(argumentos, str) else argumentos
+
     return fn(**args)

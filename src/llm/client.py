@@ -1,7 +1,7 @@
 """
-Nota: A documentação oficial indica chat.completions, porém esse endpoint
-não aceita tool calling. A Responses API (responses.create)
-funciona com tools no servidor disponibilizado e foi adotada por isso.
+src/llm/client.py
+
+Cliente OpenAI usando chat.completions — endpoint estável no servidor do professor.
 """
 
 from openai import OpenAI
@@ -26,19 +26,15 @@ def get_model_name() -> str:
 
 
 def chat(mensagem: str, system_prompt: str = None) -> str:
-    """
-    Envia mensagem simples sem tools — usado pelo módulo RAG para geração.
-    """
-    client     = get_llm_client()
-    input_list = []
-
+    """Chamada simples sem tools — usada pelo módulo RAG para geração."""
+    client   = get_llm_client()
+    messages = []
     if system_prompt:
-        input_list.append({"role": "user", "content": system_prompt})
+        messages.append({"role": "system", "content": system_prompt})
+    messages.append({"role": "user", "content": mensagem})
 
-    input_list.append({"role": "user", "content": mensagem})
-
-    response = client.responses.create(
+    response = client.chat.completions.create(
         model=get_model_name(),
-        input=input_list,
+        messages=messages,
     )
-    return response.output_text
+    return response.choices[0].message.content
