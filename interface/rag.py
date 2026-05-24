@@ -1,141 +1,140 @@
-"""pages/rag.py — Upload e consulta de materiais via RAG."""
+# -*- coding: utf-8 -*-
+"""
+interface/rag.py — Materiais RAG.
+
+Upload salva em data/raw/ e dispara indexação via src/rag/.
+Remoção apaga o arquivo e reindexa tudo sem o documento removido.
+"""
 
 import streamlit as st
-import os
 from pathlib import Path
 
-UPLOAD_DIR = Path("data/docs")
+RAW_DIR = Path("data/raw")
+
+
+def _indexar_tudo():
+    """Reindexa todos os PDFs em data/raw/ do zero."""
+    from src.rag.loader   import carregar_todos_pdfs, salvar_markdown
+    from src.rag.chunker  import chunkar_documento
+    from src.rag.embedder import construir_indices, salvar_indices
+
+    documentos = carregar_todos_pdfs(str(RAW_DIR))
+    if not documentos:
+        return 0
+
+    for doc in documentos:
+        salvar_markdown(doc["markdown"], doc["arquivo"])
+
+    todos_chunks = []
+    for doc in documentos:
+        todos_chunks.extend(chunkar_documento(doc))
+
+    indice_faiss, indice_bm25, matriz = construir_indices(todos_chunks)
+    salvar_indices(todos_chunks, indice_faiss, indice_bm25, matriz)
+    return len(todos_chunks)
+
+
+def _indexar_pdf(caminho: Path):
+    """Adiciona um único PDF aos índices existentes."""
+    from src.rag.loader   import pdf_para_markdown, salvar_markdown
+    from src.rag.chunker  import chunkar_documento
+    from src.rag.embedder import adicionar_chunks
+
+    markdown = pdf_para_markdown(caminho)
+    salvar_markdown(markdown, caminho)
+    doc    = {"nome": caminho.stem, "arquivo": str(caminho), "markdown": markdown}
+    chunks = chunkar_documento(doc)
+    adicionar_chunks(chunks)
+    return len(chunks)
 
 
 def render():
     st.markdown("# 📚 Materiais de Estudo (RAG)")
-    st.caption("Carregue PDFs ou textos para consultar via linguagem natural no Chat.")
+    st.caption("Documentos indexados ficam em `data/raw/`. Upload processa e indexa automaticamente.")
 
-    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
 
-    tab_upload, tab_query, tab_manage = st.tabs(["📤 Upload", "🔍 Consulta direta", "📁 Gerenciar"])
+    tab_upload, tab_gerenciar = st.tabs(["📤 Upload", "📁 Gerenciar documentos"])
 
     # ── Upload ────────────────────────────────────────────────────────────────
     with tab_upload:
-        st.markdown("### Carregar documentos")
         uploaded = st.file_uploader(
-            "Selecione PDFs, TXTs ou Markdown",
-            type=["pdf", "txt", "md"],
+            "Selecione PDFs para adicionar ao acervo",
+            type=["pdf"],
             accept_multiple_files=True,
             key="rag_uploader",
         )
 
         if uploaded:
-            col1, col2 = st.columns([3, 1])
-            with col1:
-                chunk_size    = st.slider("Tamanho do chunk (tokens aprox.)", 128, 1024, 512, 64)
-                chunk_overlap = st.slider("Overlap entre chunks", 0, 256, 64, 16)
-            with col2:
-                st.markdown("<br>", unsafe_allow_html=True)
-                embed_model = st.selectbox("Embeddings", ["sentence-transformers/all-MiniLM-L6-v2", "BAAI/bge-small-pt", "intfloat/multilingual-e5-small"])
+            if st.button("⚙️ Salvar e indexar", use_container_width=True, type="primary"):
+                progress = st.progress(0, text="Salvando arquivos...")
+                total_chunks = 0
 
-            if st.button("⚙️ Processar e indexar", use_container_width=True, type="primary"):
-                progress = st.progress(0, text="Iniciando…")
                 for idx, f in enumerate(uploaded):
-                    frac = (idx + 1) / len(uploaded)
-                    progress.progress(frac, text=f"Processando {f.name}…")
-
-                    dest = UPLOAD_DIR / f.name
+                    dest = RAW_DIR / f.name
                     dest.write_bytes(f.read())
+                    progress.progress((idx + 1) / len(uploaded), text=f"Indexando {f.name}…")
 
-                    # Registra no session state
-                    if f.name not in st.session_state.docs_loaded:
-                        st.session_state.docs_loaded.append(f.name)
+                    try:
+                        chunks = _indexar_pdf(dest)
+                        total_chunks += chunks
+                    except Exception as e:
+                        st.warning(f"⚠️ Erro ao indexar {f.name}: {e}")
 
                 progress.progress(1.0, text="✅ Concluído!")
-
-                st.success(f"✅ {len(uploaded)} documento(s) indexado(s) com chunk={chunk_size}, overlap={chunk_overlap}.")
-
-                with st.expander("ℹ️ Estratégia de chunking"):
-                    st.markdown(f"""
-                    | Parâmetro | Valor |
-                    |---|---|
-                    | Tamanho do chunk | `{chunk_size}` tokens |
-                    | Overlap | `{chunk_overlap}` tokens |
-                    | Modelo de embedding | `{embed_model}` |
-                    | Documentos indexados | `{len(st.session_state.docs_loaded)}` |
-
-                    **Impacto no RAG:**
-                    - Chunks menores → maior precisão, mais chamadas de recuperação
-                    - Overlap garante que informações nos limites de chunk não se percam
-                    - Embeddings multilíngues são recomendados para conteúdo em português
-                    """)
-
-    # ── Consulta direta ───────────────────────────────────────────────────────
-    with tab_query:
-        st.markdown("### Consulta direta ao RAG")
-        st.caption("Teste a recuperação sem passar pelo Chat principal.")
-
-        query = st.text_input("Pergunta", placeholder="Ex: O que é regressão logística?")
-        top_k = st.slider("Top-K documentos recuperados", 1, 10, 3)
-
-        if st.button("🔍 Buscar", use_container_width=False) and query:
-            if not st.session_state.docs_loaded:
-                st.warning("⚠️ Nenhum documento carregado. Faça upload na aba acima.")
-            else:
-                with st.spinner("Recuperando trechos relevantes…"):
-                    # Placeholder — integrar com retriever real
-                    st.markdown("**Trechos recuperados:**")
-                    for k in range(min(top_k, 3)):
-                        st.markdown(f"""
-                        <div class="jarvis-card" style="border-left:4px solid #4f8ef7;">
-                            <div style="display:flex;justify-content:space-between;">
-                                <span style="color:#4f8ef7;font-size:.8rem;font-family:var(--mono);">
-                                    📄 {st.session_state.docs_loaded[0] if st.session_state.docs_loaded else 'doc.pdf'} · chunk {k+1}
-                                </span>
-                                <span style="color:#34d399;font-size:.8rem;">score: {0.95 - k*0.08:.2f}</span>
-                            </div>
-                            <div style="color:#cbd5e1;font-size:.88rem;margin-top:6px;">
-                                [Conteúdo do chunk {k+1} para a query: "{query}"]
-                                — Este trecho será preenchido pelo retriever real após integração com
-                                o pipeline RAG (ChromaDB / FAISS + SentenceTransformers).
-                            </div>
-                        </div>
-                        """, unsafe_allow_html=True)
-
-                    st.info("💡 Para a resposta completa, use o **Chat** com a pergunta acima.")
+                st.success(f"✅ {len(uploaded)} arquivo(s) indexado(s) — {total_chunks} chunks gerados.")
+                st.rerun()
 
     # ── Gerenciar ─────────────────────────────────────────────────────────────
-    with tab_manage:
-        st.markdown("### Documentos indexados")
-        docs_disk = list(UPLOAD_DIR.glob("*")) if UPLOAD_DIR.exists() else []
+    with tab_gerenciar:
+        from src.rag.embedder import indices_existem
 
-        if not docs_disk and not st.session_state.docs_loaded:
-            st.markdown(
-                '<div class="jarvis-card" style="color:#64748b;text-align:center;padding:32px;">Nenhum documento carregado ainda.</div>',
-                unsafe_allow_html=True,
-            )
+        pdfs = sorted(RAW_DIR.glob("*.pdf"))
+
+        if not pdfs:
+            st.info("Nenhum documento em `data/raw/`. Faça upload na aba acima.")
         else:
-            all_docs = list({d.name for d in docs_disk} | set(st.session_state.docs_loaded))
-            for doc in all_docs:
-                path   = UPLOAD_DIR / doc
-                size   = f"{path.stat().st_size / 1024:.1f} KB" if path.exists() else "—"
-                ext    = doc.rsplit(".", 1)[-1].upper() if "." in doc else "?"
-                cor    = "#4f8ef7" if ext == "PDF" else "#a78bfa"
+            st.markdown(f"**{len(pdfs)} documento(s) no acervo**")
 
-                c1, c2 = st.columns([0.85, 0.15])
-                with c1:
-                    st.markdown(f"""
-                    <div class="jarvis-card" style="padding:10px 14px;margin:0 0 4px 0;">
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <span style="background:{cor}22;color:{cor};border-radius:6px;padding:1px 8px;font-size:.75rem;">{ext}</span>
-                            <span style="color:#e2e8f0;">{doc}</span>
-                            <span style="color:#64748b;font-size:.8rem;margin-left:auto;">{size}</span>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                with c2:
-                    if st.button("🗑", key=f"del_{doc}", help="Remover"):
-                        if path.exists():
-                            path.unlink()
-                        if doc in st.session_state.docs_loaded:
-                            st.session_state.docs_loaded.remove(doc)
+            for pdf in pdfs:
+                size = f"{pdf.stat().st_size / 1024:.1f} KB"
+                col_nome, col_size, col_del = st.columns([0.6, 0.2, 0.2])
+
+                with col_nome:
+                    st.markdown(
+                        f'<div style="background:#13161e;border:1px solid #1e2330;'
+                        f'border-radius:8px;padding:8px 14px;margin-bottom:4px;">'
+                        f'<span style="color:#4f8ef7;font-size:.8rem;">PDF</span> '
+                        f'<span style="color:#e2e8f0;">{pdf.name}</span></div>',
+                        unsafe_allow_html=True,
+                    )
+                with col_size:
+                    st.markdown(f"<br><span style='color:#64748b;font-size:.85rem;'>{size}</span>",
+                                unsafe_allow_html=True)
+                with col_del:
+                    if st.button("🗑 Remover", key=f"del_pdf_{pdf.name}", use_container_width=True):
+                        pdf.unlink()
+                        # Reindexar tudo sem o arquivo removido
+                        with st.spinner(f"Removendo {pdf.name} e reindexando..."):
+                            try:
+                                n = _indexar_tudo()
+                                st.success(f"✅ Removido. Índices reconstruídos com {n} chunks.")
+                            except Exception as e:
+                                st.warning(f"Arquivo removido, mas erro ao reindexar: {e}")
                         st.rerun()
 
-            st.markdown("---")
-            st.caption(f"Total: **{len(all_docs)} documento(s)**")
+        st.markdown("---")
+        col_re, col_status = st.columns(2)
+
+        with col_re:
+            if st.button("🔄 Reindexar tudo", use_container_width=True):
+                with st.spinner("Reindexando todos os documentos..."):
+                    try:
+                        n = _indexar_tudo()
+                        st.success(f"✅ Reindexação completa — {n} chunks gerados.")
+                    except Exception as e:
+                        st.error(f"Erro: {e}")
+
+        with col_status:
+            status = "✅ Índices existem" if indices_existem() else "⚠️ Índices não gerados"
+            st.markdown(f"<br><span style='font-size:.9rem;'>{status}</span>", unsafe_allow_html=True)
