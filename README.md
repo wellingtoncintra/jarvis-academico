@@ -1,6 +1,5 @@
 # Estudantes
-Wellington Cintra
-Cézar Dias
+Wellington Cintra e Cézar Dias
 
 # Video de Apresentação
 Link do Drive: https://drive.google.com/file/d/1aMq6JRgaV8YomS9Ohz1Z9L5uBFKd2G39/view?usp=sharing
