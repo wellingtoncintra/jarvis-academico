@@ -1,7 +1,9 @@
 # Estudantes
-## Wellington Cintra
-## Cézar Dias
+Wellington Cintra
+Cézar Dias
 
+# Video de Apresentação
+Link do Drive: https://drive.google.com/file/d/1WdtwzQcWwUIv2ee02kNfm5m2oOrNGnsn/view?usp=sharing
 # 🎓 JARVIS Acadêmico
 
 Assistente pessoal inteligente para estudantes universitários, construído com **Streamlit**, **RAG híbrido (FAISS + BM25)**, **Tool Calling via prompt engineering** e o modelo de linguagem **Gemma 3 12B**.
