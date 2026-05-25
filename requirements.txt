@@ -6,7 +6,7 @@ openai==1.82.0
 
 # ─── RAG ─────────────────────────────────────────────────────────────────────
 docling==2.31.0              # extração PDF → Markdown estruturado
-sentence-transformers==4.1.0 # embeddings (paraphrase-multilingual-MiniLM-L12-v2)
+sentence-transformers==3.0.1 # embeddings (paraphrase-multilingual-MiniLM-L12-v2)
 faiss-cpu==1.13.2            # índice vetorial semântico
 rank-bm25==0.2.2             # índice lexical
 
@@ -21,5 +21,5 @@ python-dotenv==1.1.0
 pydantic==2.11.4
 loguru==0.7.3
 pytest==8.3.5
-numpy>=2.0.0
+numpy==1.26.4
 torch==2.3.1
