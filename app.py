@@ -160,6 +160,7 @@ with st.sidebar:
         "✅": ("tarefas","Tarefas"),
         "📚": ("rag",    "Materiais RAG"),
         "📊": ("plan",   "Planejamento"),
+        "🧠": ("aprendizado", "Melhoria de Aprendizagem"),
         "🔧": ("logs",   "Logs"),
     }
 
@@ -193,6 +194,8 @@ elif page == "rag":
     from interface.rag import render
 elif page == "plan":
     from interface.planejamento import render
+elif page == "aprendizado":
+    from interface.aprendizado import render
 elif page == "logs":
     from interface.logs import render
 

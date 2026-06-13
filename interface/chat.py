@@ -15,6 +15,10 @@ def render():
     if "historico_llm" not in st.session_state:
         st.session_state.historico_llm = []
 
+    # Mensagem pendente injetada por outra aba (ex: Planejamento → "Gerar plano").
+    # É consumida UMA única vez e processada como um envio normal do chat.
+    pending = st.session_state.pop("pending_message", None)
+
     col_chat, col_tools = st.columns([3, 1], gap="medium")
 
     # ── Coluna de ferramentas ─────────────────────────────────────────────────
@@ -108,9 +112,15 @@ def render():
                     send       = True
 
         # ── Processar envio ───────────────────────────────────────────────────
-        if send and user_input and user_input.strip():
+        # Origem do texto: pendência de outra aba tem prioridade sobre o input.
+        if pending and pending.strip():
+            texto = pending.strip()
+        elif send and user_input and user_input.strip():
             texto = user_input.strip()
+        else:
+            texto = None
 
+        if texto:
             # Adiciona mensagem do usuário imediatamente na tela
             st.session_state.messages.append({"role": "user", "content": texto})
 

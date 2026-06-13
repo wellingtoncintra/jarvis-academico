@@ -152,16 +152,12 @@ def buscar_hibrido(pergunta: str, k: int = 3, alpha: float = 0.6) -> list[dict]:
 
 def _construir_prompt(pergunta: str, docs: list[dict]) -> str:
     """Monta o prompt com os chunks recuperados."""
+    from src.prompts.rag import rag_resposta
     contexto = "\n\n".join(
         f"Trecho {i+1} (fonte: {d['fonte']}):\n{d['texto']}"
         for i, d in enumerate(docs)
     )
-    return (
-        "Responda em português usando apenas o contexto abaixo. "
-        "Se não houver informação suficiente, diga: 'Não encontrado no contexto.'\n\n"
-        f"Contexto:\n{contexto}\n\n"
-        f"Pergunta: {pergunta}"
-    )
+    return rag_resposta(pergunta, contexto)
 
 
 def responder(

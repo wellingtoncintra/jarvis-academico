@@ -46,19 +46,8 @@ def _construir_tools_prompt() -> str:
     Gera dinamicamente a descrição das tools a partir de TOOLS_DEF.
     Adicionar uma nova tool em src/tools/ automaticamente aparece aqui.
     """
-    linhas = [
-        "Você tem acesso às ferramentas abaixo. Use-as sempre que a pergunta envolver",
-        "agenda, tarefas, materiais de estudo ou planejamento.",
-        "",
-        "Para chamar uma ferramenta, responda APENAS com JSON neste formato:",
-        '{"tool": "<nome_da_ferramenta>", "args": {<argumentos>}}',
-        "",
-        "Não coloque texto antes ou depois do JSON ao chamar uma ferramenta.",
-        "Após receber o resultado, elabore a resposta final em texto normal.",
-        "",
-        "FERRAMENTAS DISPONÍVEIS",
-        "=" * 54,
-    ]
+    from src.prompts.agent import TOOLS_PROMPT_HEADER
+    linhas = list(TOOLS_PROMPT_HEADER)
 
     for i, tool_def in enumerate(TOOLS_DEF, 1):
         # Suporta tanto formato Chat Completions (com wrapper) quanto flat
@@ -94,18 +83,10 @@ def _construir_tools_prompt() -> str:
     return "\n".join(linhas)
 
 
-SYSTEM_PROMPT = f"""\
-Você é o JARVIS Acadêmico, um assistente pessoal para estudantes universitários.
+from src.prompts.agent import system_prompt as _build_system_prompt
+from src.prompts.agent import RESULTADO_TOOL_SUFIXO
 
-{_construir_tools_prompt()}
-
-Diretrizes gerais:
-- Sempre consulte as ferramentas antes de responder sobre agenda, tarefas ou materiais.
-- Quando adicionar algo, confirme ao usuário o que foi cadastrado.
-- Para planos de estudo, chame planejar_estudos primeiro e use o contexto retornado.
-- Responda sempre em português brasileiro, de forma clara e objetiva.
-- Se uma ferramenta retornar erro, explique o problema e sugira alternativa.
-"""
+SYSTEM_PROMPT = _build_system_prompt(_construir_tools_prompt())
 
 # ── Detector de tool call na resposta ────────────────────────────────────────
 
@@ -230,7 +211,7 @@ def processar_mensagem(
             "content": (
                 f"[Resultado da ferramenta '{nome}']\n"
                 + json.dumps(resultado, ensure_ascii=False, indent=2)
-                + "\n\nAgora responda ao usuário em português com base nesse resultado."
+                + RESULTADO_TOOL_SUFIXO
             ),
         })
 
