@@ -1,0 +1,302 @@
+{
+  "projeto": "JARVIS Acadêmico",
+  "data_avaliacao": "2026-06-14",
+  "metodo_recuperacao": "bm25",
+  "k": 3,
+  "observacao": "Avaliação manual feita sobre os chunks persistidos em data/processed/chunks.pkl. As respostas foram julgadas contra os trechos recuperados e o conteúdo esperado da disciplina.",
+  "perguntas": [
+    {
+      "id": "Q01",
+      "pergunta": "O que é um autômato finito determinístico e quais são seus componentes?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "afnd_chunk_0000",
+          "fonte": "afnd",
+          "score": 17.554,
+          "trecho": "Um AFD e uma maquina deterministica: a partir de um estado e um simbolo, sabemos qual e o proximo estado usando uma funcao de transicao."
+        },
+        {
+          "chunk_id": "AFD_chunk_0000",
+          "fonte": "AFD",
+          "score": 16.508,
+          "trecho": "Um automato finito deterministico (AFD) M e uma quintupla."
+        },
+        {
+          "chunk_id": "AFD_chunk_0001",
+          "fonte": "AFD",
+          "score": 14.628,
+          "trecho": "Q: conjunto finito de estados; Sigma: alfabeto de entrada; delta: funcao de transicao; q0: estado inicial; F: estados finais."
+        }
+      ],
+      "resposta": "Um AFD e uma maquina abstrata deterministica para reconhecer linguagens. Formalmente, e definido por uma quintupla formada por conjunto finito de estados Q, alfabeto Sigma, funcao de transicao delta, estado inicial q0 e conjunto de estados finais F.",
+      "classificacao": "correta",
+      "justificativa": "A resposta usa os dois chunks mais importantes: a definição geral de AFD e a lista de componentes formais."
+    },
+    {
+      "id": "Q02",
+      "pergunta": "Como um AFD aceita ou rejeita uma palavra?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "AFD_chunk_0003",
+          "fonte": "AFD",
+          "score": 14.033,
+          "trecho": "M aceita x se Delta(x) pertence a F. M rejeita x se nao aceita."
+        },
+        {
+          "chunk_id": "AFD_chunk_0014",
+          "fonte": "AFD",
+          "score": 12.9,
+          "trecho": "Um AFD pode ser visto como um formalismo reconhecedor para representar uma linguagem."
+        },
+        {
+          "chunk_id": "afnd_chunk_0008",
+          "fonte": "afnd",
+          "score": 9.943,
+          "trecho": "Define-se a computacao estendida e a condicao de aceitacao para automatos nao determinísticos."
+        }
+      ],
+      "resposta": "O AFD processa a palavra a partir do estado inicial, aplicando a funcao de transicao para cada simbolo. Ao final, se o estado alcancado esta em F, a palavra e aceita; caso contrario, e rejeitada.",
+      "classificacao": "correta",
+      "justificativa": "O chunk AFD_chunk_0003 contém diretamente a regra de aceitação e rejeição."
+    },
+    {
+      "id": "Q03",
+      "pergunta": "O que diferencia um AFND de um AFD?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "afnd_chunk_0011",
+          "fonte": "afnd",
+          "score": 17.654,
+          "trecho": "Equivalencia entre AFD e AFND: tudo o que pode ser computado por um AFD tambem pode ser computado por um AFND e vice-versa."
+        },
+        {
+          "chunk_id": "afnd_chunk_0013",
+          "fonte": "afnd",
+          "score": 17.487,
+          "trecho": "Existe um AFD que reconhece A se e somente se existe um AFND que reconhece A."
+        },
+        {
+          "chunk_id": "afnd_chunk_0021",
+          "fonte": "afnd",
+          "score": 14.685,
+          "trecho": "Exercicios sobre conversao e numero de estados entre AFND e AFD."
+        }
+      ],
+      "resposta": "AFD e deterministico: para cada estado e simbolo ha uma unica proxima escolha. AFND permite zero, uma ou varias transicoes possiveis, inclusive transicoes vazias em alguns modelos. Apesar dessa diferenca operacional, AFD e AFND reconhecem a mesma classe de linguagens regulares.",
+      "classificacao": "parcialmente correta",
+      "justificativa": "A resposta esta conceitualmente boa, mas os chunks recuperados privilegiaram a equivalência e nao trouxeram o trecho direto de definicao do AFND, reduzindo a evidência recuperada."
+    },
+    {
+      "id": "Q04",
+      "pergunta": "O que são transições vazias em AFND?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "afnd_chunk_0011",
+          "fonte": "afnd",
+          "score": 13.54,
+          "trecho": "Trecho sobre equivalencia entre AFD e AFND."
+        },
+        {
+          "chunk_id": "afnd_chunk_0012",
+          "fonte": "afnd",
+          "score": 11.46,
+          "trecho": "E(q) corresponde aos estados que podem ser atingidos a partir de q viajando-se ao longo de transicoes vazias."
+        },
+        {
+          "chunk_id": "afnd_chunk_0001",
+          "fonte": "afnd",
+          "score": 10.93,
+          "trecho": "Epsilon representa uma transicao que pode ocorrer sem a leitura de um simbolo; setas com epsilon sao ditas transicoes vazias."
+        }
+      ],
+      "resposta": "Transicoes vazias, ou epsilon-transicoes, sao movimentos que o AFND pode fazer sem consumir simbolo da entrada. Elas permitem mudar de estado espontaneamente e ajudam a modelar varias possibilidades de computacao.",
+      "classificacao": "correta",
+      "justificativa": "Apesar de o primeiro chunk não ser o melhor, os chunks 0012 e 0001 sustentam diretamente a resposta."
+    },
+    {
+      "id": "Q05",
+      "pergunta": "O que são gramáticas lineares?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "GramaticasLineares_chunk_0000",
+          "fonte": "GramaticasLineares",
+          "score": 11.015,
+          "trecho": "Uma gramatica e uma quadrupla ordenada G = (V, Sigma, P, S)."
+        },
+        {
+          "chunk_id": "GramaticasLineares_chunk_0007",
+          "fonte": "GramaticasLineares",
+          "score": 10.874,
+          "trecho": "Define-se gramatica linear e as formas linear a direita e linear a esquerda."
+        },
+        {
+          "chunk_id": "LF-41-79_chunk_0100",
+          "fonte": "LF-41-79",
+          "score": 9.555,
+          "trecho": "Exercicios sobre gramaticas lineares a direita e expressoes regulares."
+        }
+      ],
+      "resposta": "Gramaticas lineares sao gramaticas em que as producoes restringem a quantidade e a posicao de variaveis no lado direito. Nas variantes mais comuns, a variavel pode aparecer no fim da producao, formando uma gramatica linear a direita, ou no inicio, formando uma gramatica linear a esquerda.",
+      "classificacao": "correta",
+      "justificativa": "A resposta segue a definição do material de GramaticasLineares."
+    },
+    {
+      "id": "Q06",
+      "pergunta": "O que é uma gramática livre de contexto?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0000",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 19.388,
+          "trecho": "Uma gramatica livre de contexto e uma gramatica G = (V, Sigma, P, S) onde cada regra alpha -> beta tem alpha em V."
+        },
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0001",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 16.84,
+          "trecho": "Uma linguagem A e dita livre de contexto se existe uma gramatica livre de contexto G tal que L(G) = A."
+        },
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0095",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 16.423,
+          "trecho": "Exercicios sobre GLC e formas normais."
+        }
+      ],
+      "resposta": "Uma GLC e uma gramatica G = (V, Sigma, P, S) em que cada producao tem uma unica variavel no lado esquerdo e uma cadeia de variaveis e/ou terminais no lado direito. Uma linguagem e livre de contexto quando pode ser gerada por alguma GLC.",
+      "classificacao": "correta",
+      "justificativa": "Os dois primeiros chunks trazem a definição formal e a relação com linguagens livres de contexto."
+    },
+    {
+      "id": "Q07",
+      "pergunta": "Qual é a ideia da Forma Normal de Chomsky?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0052",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 25.727,
+          "trecho": "Uma GLC esta na Forma Normal de Chomsky se todas as producoes sao da forma A -> BC ou A -> a; adicionalmente permite-se S -> epsilon."
+        },
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0051",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 23.337,
+          "trecho": "Formas normais restringem producoes de GLCs a formas especiais, como Chomsky e Greibach."
+        },
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0068",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 16.142,
+          "trecho": "Trecho de transicao para Forma Normal de Greibach."
+        }
+      ],
+      "resposta": "A Forma Normal de Chomsky padroniza uma GLC para que suas producoes tenham apenas dois formatos principais: uma variavel gerando duas variaveis, A -> BC, ou uma variavel gerando um terminal, A -> a. Em alguns casos tambem se permite S -> epsilon.",
+      "classificacao": "correta",
+      "justificativa": "O primeiro chunk recuperado contem exatamente a definição pedida."
+    },
+    {
+      "id": "Q08",
+      "pergunta": "Como expressões regulares se relacionam com linguagens regulares?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "AFD_chunk_0029",
+          "fonte": "AFD",
+          "score": 13.673,
+          "trecho": "Se A e B sao linguagens regulares, entao A uniao B, A concatenado B e A estrela sao regulares."
+        },
+        {
+          "chunk_id": "LF-27-39_chunk_0001",
+          "fonte": "LF-27-39",
+          "score": 11.657,
+          "trecho": "Introducao a propriedade do bombeamento das linguagens regulares."
+        },
+        {
+          "chunk_id": "LF-7-25_chunk_0080",
+          "fonte": "LF-7-25",
+          "score": 11.639,
+          "trecho": "Exemplos de expressoes regulares para linguagens de inteiros e variaveis."
+        }
+      ],
+      "resposta": "Expressoes regulares descrevem linguagens regulares usando operacoes como uniao, concatenacao e estrela. Como essas operacoes preservam regularidade, elas servem como uma forma declarativa de especificar linguagens que tambem podem ser reconhecidas por automatos finitos.",
+      "classificacao": "parcialmente correta",
+      "justificativa": "A resposta está correta em teoria, mas os chunks recuperados nao trazem diretamente o teorema de equivalência entre expressões regulares e autômatos finitos; a evidência ficou indireta."
+    },
+    {
+      "id": "Q09",
+      "pergunta": "O que a propriedade do bombeamento permite provar sobre linguagens regulares?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "LF-27-39_chunk_0001",
+          "fonte": "LF-27-39",
+          "score": 23.74,
+          "trecho": "Introducao a propriedade do bombeamento das linguagens regulares."
+        },
+        {
+          "chunk_id": "LF-81-108_chunk_0082",
+          "fonte": "LF-81-108",
+          "score": 23.45,
+          "trecho": "A estrategia para provar que nao existe gramatica livre de contexto e semelhante ao caso de linguagens regulares."
+        },
+        {
+          "chunk_id": "LF-27-39_chunk_0000",
+          "fonte": "LF-27-39",
+          "score": 21.46,
+          "trecho": "Para provar que uma linguagem nao e regular, mostra-se que ela nao satisfaz uma propriedade que toda linguagem regular satisfaz."
+        }
+      ],
+      "resposta": "A propriedade do bombeamento e usada como criterio necessario: toda linguagem regular deve satisfaze-la. Assim, para provar que uma linguagem nao e regular, busca-se uma contradicao mostrando que nenhuma decomposicao adequada permite bombear a palavra mantendo-a na linguagem.",
+      "classificacao": "correta",
+      "justificativa": "Os chunks de LF-27-39 explicam a estratégia central de uso da propriedade."
+    },
+    {
+      "id": "Q10",
+      "pergunta": "Como construir um AFND a partir de uma gramática linear à direita?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "LF-41-79_chunk_0109",
+          "fonte": "LF-41-79",
+          "score": 19.37,
+          "trecho": "Discussao sobre gramaticas lineares a direita em exemplos."
+        },
+        {
+          "chunk_id": "GramaticasLineares_chunk_0007",
+          "fonte": "GramaticasLineares",
+          "score": 19.35,
+          "trecho": "Definicao de gramaticas lineares, incluindo restricoes para producoes lineares."
+        },
+        {
+          "chunk_id": "GramaticasLineares_chunk_0019",
+          "fonte": "GramaticasLineares",
+          "score": 17.18,
+          "trecho": "Exercicios pedindo a descricao de um AFND que reconhece uma linguagem gerada por uma gramatica linear."
+        }
+      ],
+      "resposta": "A ideia e tratar variaveis da gramatica como estados do automato. Para uma regra do tipo A -> aB, cria-se uma transicao de A para B lendo a; para uma regra A -> a, cria-se uma transicao para um estado final novo lendo a. O simbolo inicial vira o estado inicial.",
+      "classificacao": "parcialmente correta",
+      "justificativa": "A resposta descreve o algoritmo esperado, mas os chunks recuperados contem mais definições e exercícios do que a construção formal completa."
+    }
+  ],
+  "analise_erros": [
+    {
+      "id": "E01",
+      "tipo": "recuperação",
+      "falha": "Perguntas comparativas sobre AFD e AFND recuperaram trechos sobre equivalência, mas não necessariamente a definição operacional do AFND.",
+      "causa": "BM25 favoreceu a repetição dos termos AFD/AFND e equivalência, sem entender que a intenção era contrastar determinismo e não determinismo.",
+      "possivel_solucao": "Usar busca híbrida como padrão, aumentar k para 5 em perguntas comparativas e adicionar reranking por similaridade semântica ou por pergunta expandida."
+    },
+    {
+      "id": "E02",
+      "tipo": "pré-processamento/OCR",
+      "falha": "Alguns textos convertidos de PDF aparecem com acentos quebrados, símbolos como glyph[epsilon1] e fórmulas como formula-not-decoded.",
+      "causa": "Conversão automática de PDF para Markdown não preservou perfeitamente símbolos matemáticos, acentos e fórmulas.",
+      "possivel_solucao": "Criar uma etapa de limpeza pós-conversão para normalizar epsilon, remover marcadores de imagem/formula quando atrapalharem e revisar manualmente chunks críticos."
+    },
+    {
+      "id": "E03",
+      "tipo": "geração",
+      "falha": "Em perguntas sobre expressões regulares e construção de AFND, a resposta pode usar conhecimento correto do modelo mesmo quando os chunks recuperados só dão evidência indireta.",
+      "causa": "A LLM tende a completar lacunas com conhecimento paramétrico quando o contexto recuperado é incompleto.",
+      "possivel_solucao": "Obrigar a resposta a citar os chunks usados, incluir aviso quando a evidência for fraca e aplicar limiar mínimo de score antes de responder com segurança."
+    }
+  ]
+}

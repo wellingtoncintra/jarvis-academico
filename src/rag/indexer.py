@@ -15,10 +15,14 @@ import argparse
 from pathlib import Path
 from loguru import logger
 
-#from .loader  import carregar_todos_pdfs, pdf_para_markdown, salvar_markdown
-from loader import carregar_todos_pdfs, pdf_para_markdown, salvar_markdown
-from chunker import chunkar_documento, estatisticas
-from embedder import construir_indices, salvar_indices, adicionar_chunks
+try:
+    from .loader import carregar_todos_pdfs, pdf_para_markdown, salvar_markdown
+    from .chunker import chunkar_documento, estatisticas
+    from .embedder import construir_indices, salvar_indices, adicionar_chunks
+except ImportError:
+    from src.rag.loader import carregar_todos_pdfs, pdf_para_markdown, salvar_markdown
+    from src.rag.chunker import chunkar_documento, estatisticas
+    from src.rag.embedder import construir_indices, salvar_indices, adicionar_chunks
 
 
 def indexar_pasta(pasta: str = "data/raw") -> None:
