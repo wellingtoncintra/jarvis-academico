@@ -195,7 +195,6 @@ def processar_mensagem(
 
         try:
             resultado = executar_tool(nome, args)
-            #logger.log(resultado)
             status    = "ok"
         except Exception as e:
             resultado = {"erro": str(e)}

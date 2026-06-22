@@ -1,0 +1,246 @@
+{
+  "metodo": "bm25",
+  "k": 3,
+  "resultados": [
+    {
+      "id": "Q01",
+      "pergunta": "O que é um autômato finito determinístico e quais são seus componentes?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "LF-7-25_chunk_0078",
+          "fonte": "LF-7-25",
+          "score": 11.263,
+          "trecho": "<!-- formula-not-decoded --> Encerramos com três exemplos de natureza mais prática. Umdos primeiros passos do processo de compilação de uma linguagem de programação é conhecido como análise léxica . Nesta etapa o compilador identifica, por exemplo, quais foram os números intei..."
+        },
+        {
+          "chunk_id": "AFD_chunk_0047",
+          "fonte": "AFD",
+          "score": 11.162,
+          "trecho": "- 1. eliminar estados inating´ ıveis ; isto ´ e, eliminar os estados q ∈ Q para os quais n˜ ao existe x ∈ Σ ∗ tal que ∆( x ) = q ; - 2. fundir estados ' equivalentes '."
+        },
+        {
+          "chunk_id": "LFA_preliminares_livro_chunk_0035",
+          "fonte": "LFA_preliminares_livro",
+          "score": 10.395,
+          "trecho": "Surpreendentemente, os termos 'problema de decis˜ ao' e 'linguagem' possuem uma forte rela¸ c˜ ao pois, qualquer problema de decis˜ ao pode ser visto como sendo o problema de decidir se uma dada cadeia pertence a uma dada linguagem. Em outras palavras, a entrada de um problema..."
+        }
+      ]
+    },
+    {
+      "id": "Q02",
+      "pergunta": "Como um AFD aceita ou rejeita uma palavra?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "AFD_chunk_0003",
+          "fonte": "AFD",
+          "score": 14.033,
+          "trecho": "Dizemos que: - 1. M aceita x se ∆( x ) ∈ F . Denotamos isso por M ( x ) = aceita ; - 2. M rejeita x se ¬ ( M ( x ) = aceita ). Denotamos isso por M ( x ) = rejeita ; - 3. M reconhece a linguagem L ( M ) = { x ∈ Σ ∗ : M ( x ) = aceita } ; - 4. M e N s˜ ao equivalentes se L ( M ..."
+        },
+        {
+          "chunk_id": "AFD_chunk_0014",
+          "fonte": "AFD",
+          "score": 12.9,
+          "trecho": "<!-- image --> ## Implementa¸ c˜ ao Um AFD pode ser visto como um formalismo reconhecedor para representar uma linguagem, ou seja, uma m´ aquina que aceita cadeias de uma determinada linguagem. Esse mecanismo pode ser implementado por um programa de computador. A seguir mostra..."
+        },
+        {
+          "chunk_id": "afnd_chunk_0008",
+          "fonte": "afnd",
+          "score": 9.943,
+          "trecho": "- 1. r 0 = q e - 2. r i ∈ δ ( r i -1 , x i ) para cada i = 1 , 2 , . . . , m . ̸ Escrevemos simplesmente ∆( x ) em vez de ∆( q, x ) se q ´ e o estado inicial. Dizemos que N aceita x se ∆( x ) ∩ F = ∅ ; caso contr´ ario dizemos que N rejeita x . Alinguagem de todas as cadeias a..."
+        }
+      ]
+    },
+    {
+      "id": "Q03",
+      "pergunta": "O que diferencia um AFND de um AFD?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "afnd_chunk_0011",
+          "fonte": "afnd",
+          "score": 17.654,
+          "trecho": "## Equivalˆ encia entre AFD e AFND Mostrar a equivalˆ encia entre AFD e AFND corresponde a mostrar que tudo o que pode ser computado por um AFD tamb´ em pode ser computado por um AFND e vice-versa. Para mostrar essa equivalˆ encia vamos construir, a partir de um AFD M , um AFN..."
+        },
+        {
+          "chunk_id": "afnd_chunk_0013",
+          "fonte": "afnd",
+          "score": 17.487,
+          "trecho": "Teorema 1. Seja A uma linguagem. Existe um AFD que reconhece A se e somente se existe um AFND que reconhece A . <!-- image --> Prova . Mostrar que se existe um AFD que reconhece A , ent˜ ao existe um AFND que reconhece A ´ e imediato, pois h´ a uma maneira trivial de transform..."
+        },
+        {
+          "chunk_id": "afnd_chunk_0021",
+          "fonte": "afnd",
+          "score": 14.685,
+          "trecho": "- (b) Mostre que h´ a um AFD M com 2 n estados tal que L ( M ) = A n . - (c) Mostre que qualquer AFD M tal que L ( M ) = A n possui pelo menos 2 n estados. - 5. Considere a seguinte afirma¸ c˜ ao: Seja N um AFND que possui n estados e que n˜ ao existe AFND com menos estados qu..."
+        }
+      ]
+    },
+    {
+      "id": "Q04",
+      "pergunta": "O que são transições vazias em AFND?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "afnd_chunk_0011",
+          "fonte": "afnd",
+          "score": 13.542,
+          "trecho": "## Equivalˆ encia entre AFD e AFND Mostrar a equivalˆ encia entre AFD e AFND corresponde a mostrar que tudo o que pode ser computado por um AFD tamb´ em pode ser computado por um AFND e vice-versa. Para mostrar essa equivalˆ encia vamos construir, a partir de um AFD M , um AFN..."
+        },
+        {
+          "chunk_id": "afnd_chunk_0012",
+          "fonte": "afnd",
+          "score": 11.456,
+          "trecho": "Seja q um estado de um AFND ( Q, Σ , δ, q 0 , F ) Definimos <!-- formula-not-decoded --> Ou seja, E ( q ) corresponde aos estados que podem ser atingidos a partir de q (inclusive) viajando-se ao longo de zero ou mais transi¸ c˜ oes vazias."
+        },
+        {
+          "chunk_id": "afnd_chunk_0001",
+          "fonte": "afnd",
+          "score": 10.928,
+          "trecho": "Exemplo 1. Antes de definir precisamente um AFND vejamos o seguinte diagrama N que aceitas cadeias terminadas em 11 e 101. <!-- image --> Os r´ otulos das 'setas' s˜ ao s´ ımbolos em Σ ϵ := Σ ∪{ ε } onde ε ̸∈ Σ e representa uma transi¸ c˜ ao que pode ocorrer sem a leitura de u..."
+        }
+      ]
+    },
+    {
+      "id": "Q05",
+      "pergunta": "O que são gramáticas lineares?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "LF-41-79_chunk_0100",
+          "fonte": "LF-41-79",
+          "score": 7.278,
+          "trecho": "## 1. Exercícios - 1. Determine gramáticas lineares à direita que gerem as linguagens denotadas pelas seguintes expressões regulares: - (a) (0 ∗ · 1) ∪ 0 ; - (b) (0 ∗ · 1) ∪ (1 ∗ · 0) ; - (c) ((0 ∗ · 1) ∪ (1 ∗ · 0)) ∗ . - 2. Ache a expressão regular que denota a linguagem regu..."
+        },
+        {
+          "chunk_id": "LF-41-79_chunk_0112",
+          "fonte": "LF-41-79",
+          "score": 6.753,
+          "trecho": "Como já ocorria com as gramáticas lineares à direita, estaremos gerando palavras a partir de uma gramática livre de contexto pelo encadeamento de várias derivações de um passo. Assim, dizer que w ′ pode ser derivada a partir de w em G em n passos significa que existem palavras..."
+        },
+        {
+          "chunk_id": "LF-41-79_chunk_0099",
+          "fonte": "LF-41-79",
+          "score": 6.549,
+          "trecho": "GLYPH&lt;12&gt; GLYPH&lt;12&gt; + + GLYPH&lt;10&gt; GLYPH&lt;10&gt; <!-- image --> / / k k / / / / / / ## CAPíTULO 8 ## Gramáticas lineares à direita Neste capítulo começamos o estudo das gramáticas formais, que serão introduzidas a partir da noção de autômato finito."
+        }
+      ]
+    },
+    {
+      "id": "Q06",
+      "pergunta": "O que é uma gramática livre de contexto?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0000",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 16.766,
+          "trecho": "## Gram´ aticas e linguagens livre de contexto ## Gram´ aticas livres de contexto Uma gram´ atica livre de contexto ´ e uma gram´ atica G = ( V, Σ , P , S ) onde cada regra de produ¸ c˜ ao α → β em P ´ e tal que α ∈ V e β ∈ ( V ∪ Σ) ∗ , ou seja, o que caracteriza o fato de uma..."
+        },
+        {
+          "chunk_id": "LF-81-108_chunk_0128",
+          "fonte": "LF-81-108",
+          "score": 16.221,
+          "trecho": "Note que nossa conclusão diz apenas que a intersecção e o complemento de linguagens livres de contexto pode não ser livre de contexto. Isto porque, em muitos casos, estas operações produzem linguagens livres de contexto. Por exemplo, toda linguagem regular é livre de contexto;..."
+        },
+        {
+          "chunk_id": "LF-109-143_chunk_0107",
+          "fonte": "LF-109-143",
+          "score": 16.115,
+          "trecho": "Como uma linguagem é livre de contexto se for gerada por uma gramática livre de contexto, o que precisamos fazer é estabelecer um elo entre gramáticas livres de contexto e autômatos de pilha."
+        }
+      ]
+    },
+    {
+      "id": "Q07",
+      "pergunta": "Qual é a ideia da Forma Normal de Chomsky?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0052",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 28.082,
+          "trecho": "## Forma Normal de Chomsky ̸ Uma GLC G = ( V, Σ , P , S ) est´ a na Forma Normal de Chomsky (FNC) se e somente se todas as produ¸ c˜ oes de G s˜ ao da forma A → BC ou A → a , onde A, B, C ∈ V e a ∈ Σ e A = S . Adicionalmente, permitimos a regra S → ϵ ."
+        },
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0051",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 25.481,
+          "trecho": "## Formas Normais Em muitas aplica¸ c˜ oes ´ e comum assumirmos que as produ¸ c˜ oes de uma GLC's est˜ ao restritas a uma dada forma especial. Duas dessas formas ´ uteis s˜ ao a Forma Normal de Chomsky (FNC) e a Forma Normal de Greibach (FNG)."
+        },
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0068",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 17.994,
+          "trecho": "cadeia w ∈ L ( G ) ´ e derivada a partir do s´ ımbolo inicial de G com exatamente 2 · | w | -1 passos de deriva¸ c˜ ao. ## Forma Normal de Greibach Vide [Enc14]. Uma GLC G = ( V, Σ , P , S ) est´ a na Forma Normal de Greibach (FNG) se a vari´ avel inicial nunca aparece do lado..."
+        }
+      ]
+    },
+    {
+      "id": "Q08",
+      "pergunta": "Como expressões regulares se relacionam com linguagens regulares?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "AFD_chunk_0029",
+          "fonte": "AFD",
+          "score": 13.673,
+          "trecho": "reconhece A ∪ { ϵ } . <!-- formula-not-decoded --> □ Teorema 1. Sejam A e B linguagens regulares sobre Σ . Ent˜ ao A ∪ B , A · B e A ∗ s˜ ao regulares."
+        },
+        {
+          "chunk_id": "LF-27-39_chunk_0001",
+          "fonte": "LF-27-39",
+          "score": 11.657,
+          "trecho": "## 1. Propriedade do bombeamento Começamos por introduzir a terminologia básica e obter uma primeira aproximação para a propriedade de bombeamento das linguagens regulares."
+        },
+        {
+          "chunk_id": "LF-7-25_chunk_0080",
+          "fonte": "LF-7-25",
+          "score": 11.639,
+          "trecho": "Abordaremos este problema detalhadamente a partir do próximo capítulo. Entretanto, já estamos em condições de obter expressões regulares para as linguagens que descrevem inteiros e variáveis de um programa, como veremos a seguir."
+        }
+      ]
+    },
+    {
+      "id": "Q09",
+      "pergunta": "O que a propriedade do bombeamento permite provar sobre linguagens regulares?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "LF-27-39_chunk_0001",
+          "fonte": "LF-27-39",
+          "score": 23.74,
+          "trecho": "## 1. Propriedade do bombeamento Começamos por introduzir a terminologia básica e obter uma primeira aproximação para a propriedade de bombeamento das linguagens regulares."
+        },
+        {
+          "chunk_id": "LF-81-108_chunk_0082",
+          "fonte": "LF-81-108",
+          "score": 23.452,
+          "trecho": "Mas como será possível provar que não existe nenhuma gramática livre de contexto que gere uma dada linguagem? A estratégia é a mesma adotada para o caso de linguagens regulares. Isto é, provaremos que toda linguagem livre de contexto satisfaz uma propriedade de bombeamento. Po..."
+        },
+        {
+          "chunk_id": "LF-27-39_chunk_0000",
+          "fonte": "LF-27-39",
+          "score": 21.459,
+          "trecho": "/ / / / ## CAPíTULO 4 ## Linguagens que não são regulares O objetivo deste capítulo é desenvolver um método que nos permita mostrar que uma dada linguagem não é regular. Nossa estratégia será a seguinte. Emprimeiro lugar, mostraremos que toda linguagem regular satisfaz certa p..."
+        }
+      ]
+    },
+    {
+      "id": "Q10",
+      "pergunta": "Como construir um AFND a partir de uma gramática linear à direita?",
+      "documentos_recuperados": [
+        {
+          "chunk_id": "LF-41-79_chunk_0109",
+          "fonte": "LF-41-79",
+          "score": 21.214,
+          "trecho": "Mais uma vez, apesar de ser claramente livre de contexto, esta gramática não é linear à direita, por causa da regra S → X 1 X . Os dois exemplos construídos acima estão relacionados a linguagens que são velhas conhecidas nossas. Entretanto, para constatar isto precisamos enten..."
+        },
+        {
+          "chunk_id": "afnd_chunk_0011",
+          "fonte": "afnd",
+          "score": 20.607,
+          "trecho": "## Equivalˆ encia entre AFD e AFND Mostrar a equivalˆ encia entre AFD e AFND corresponde a mostrar que tudo o que pode ser computado por um AFD tamb´ em pode ser computado por um AFND e vice-versa. Para mostrar essa equivalˆ encia vamos construir, a partir de um AFD M , um AFN..."
+        },
+        {
+          "chunk_id": "GramaticasLineares_chunk_0019",
+          "fonte": "GramaticasLineares",
+          "score": 20.214,
+          "trecho": "- 6. Descreva uma GLUE que gera uma linguagem A a partir de uma GLE que gera A . - 7. Descreva uma GLUE que gera uma linguagem A a partir de um AFD que reconhece A . - 8. Descreva um AFND que reconhece uma linguagem A a partir de uma GLUE que gera A ."
+        }
+      ]
+    }
+  ]
+}
