@@ -15,7 +15,6 @@ data/chroma_db/
 logs/
 
 # Python
-__pycache__/
 *.py[cod]
 *.egg-info/
 dist/
@@ -31,6 +30,3 @@ build/
 Thumbs.db
 
 *__pycache__/
-
-
-src/storage/__pycache__/
