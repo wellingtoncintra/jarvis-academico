@@ -2,10 +2,13 @@
 src/storage/database.py
 
 Responsável por criar e gerenciar a conexão com o banco SQLite.
-Todas as outras funções de storage importam get_connection() daqui.
+As funções de storage usam o context manager get_cursor() daqui, que
+garante commit no sucesso, rollback em caso de erro e fechamento da
+conexão mesmo quando uma exceção é levantada.
 """
 
 import sqlite3
+from contextlib import contextmanager
 from pathlib import Path
 from dotenv import load_dotenv
 import os
@@ -34,15 +37,43 @@ def get_connection() -> sqlite3.Connection:
     return conn
 
 
+@contextmanager
+def get_cursor():
+    """
+    Context manager para operações no banco.
+
+    Garante, de forma única para leitura e escrita:
+      - commit automático quando o bloco termina sem erro;
+      - rollback automático se uma exceção for levantada;
+      - fechamento da conexão em qualquer caso (bloco finally).
+
+    Substitui o padrão anterior (conn = get_connection(); with conn: ...;
+    conn.close()), no qual o close() ficava fora do with e podia não
+    executar em caso de exceção, vazando a conexão.
+
+    Uso:
+        with get_cursor() as cur:
+            cur.execute("INSERT INTO ...", (...))
+            novo_id = cur.lastrowid
+    """
+    conn = get_connection()
+    try:
+        yield conn.cursor()
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
 def criar_tabelas():
     """
     Cria todas as tabelas do banco se ainda não existirem.
     Seguro para rodar múltiplas vezes (usa IF NOT EXISTS).
     """
-    conn = get_connection()
-
-    with conn:
-        conn.executescript("""
+    with get_cursor() as cur:
+        cur.executescript("""
             CREATE TABLE IF NOT EXISTS agenda (
                 id          INTEGER PRIMARY KEY AUTOINCREMENT,
                 titulo      TEXT    NOT NULL,
@@ -65,8 +96,6 @@ def criar_tabelas():
                 concluido_em TEXT               -- preenchido ao marcar como concluída
             );
         """)
-
-    conn.close()
 
 
 # Cria as tabelas automaticamente quando o módulo é importado

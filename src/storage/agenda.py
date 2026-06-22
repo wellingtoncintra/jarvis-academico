@@ -3,10 +3,13 @@ src/storage/agenda.py
 
 Funções CRUD para a tabela de agenda.
 Usadas diretamente pelas tools do agente.
+
+Todas as operações usam o context manager get_cursor() (em database.py),
+que garante commit/rollback e fechamento da conexão mesmo em caso de erro.
 """
 
 from datetime import date, timedelta
-from .database import get_connection
+from .database import get_cursor
 
 
 # ─── CREATE ──────────────────────────────────────────────────────────────────
@@ -30,31 +33,26 @@ def adicionar_evento(
 
     Retorna o evento criado como dicionário.
     """
-    conn = get_connection()
-    with conn:
-        cursor = conn.execute(
+    with get_cursor() as cur:
+        cur.execute(
             """
             INSERT INTO agenda (titulo, data, hora, tipo, descricao)
             VALUES (?, ?, ?, ?, ?)
             """,
             (titulo, data, hora, tipo, descricao),
         )
-        evento_id = cursor.lastrowid
+        evento_id = cur.lastrowid
 
-    evento = buscar_evento_por_id(evento_id)
-    conn.close()
-    return evento
+    return buscar_evento_por_id(evento_id)
 
 
 # ─── READ ─────────────────────────────────────────────────────────────────────
 
 def buscar_evento_por_id(evento_id: int) -> dict | None:
     """Retorna um evento pelo ID ou None se não encontrado."""
-    conn = get_connection()
-    row = conn.execute(
-        "SELECT * FROM agenda WHERE id = ?", (evento_id,)
-    ).fetchone()
-    conn.close()
+    with get_cursor() as cur:
+        cur.execute("SELECT * FROM agenda WHERE id = ?", (evento_id,))
+        row = cur.fetchone()
     return dict(row) if row else None
 
 
@@ -63,12 +61,12 @@ def listar_eventos_por_data(data: str) -> list[dict]:
     Lista todos os eventos de uma data específica.
     data: formato YYYY-MM-DD
     """
-    conn = get_connection()
-    rows = conn.execute(
-        "SELECT * FROM agenda WHERE data = ? ORDER BY hora ASC NULLS LAST",
-        (data,),
-    ).fetchall()
-    conn.close()
+    with get_cursor() as cur:
+        cur.execute(
+            "SELECT * FROM agenda WHERE data = ? ORDER BY hora ASC NULLS LAST",
+            (data,),
+        )
+        rows = cur.fetchall()
     return [dict(r) for r in rows]
 
 
@@ -77,16 +75,16 @@ def listar_eventos_por_periodo(data_inicio: str, data_fim: str) -> list[dict]:
     Lista eventos entre duas datas (inclusive).
     Datas no formato YYYY-MM-DD.
     """
-    conn = get_connection()
-    rows = conn.execute(
-        """
-        SELECT * FROM agenda
-        WHERE data BETWEEN ? AND ?
-        ORDER BY data ASC, hora ASC NULLS LAST
-        """,
-        (data_inicio, data_fim),
-    ).fetchall()
-    conn.close()
+    with get_cursor() as cur:
+        cur.execute(
+            """
+            SELECT * FROM agenda
+            WHERE data BETWEEN ? AND ?
+            ORDER BY data ASC, hora ASC NULLS LAST
+            """,
+            (data_inicio, data_fim),
+        )
+        rows = cur.fetchall()
     return [dict(r) for r in rows]
 
 
@@ -105,11 +103,11 @@ def listar_eventos_semana() -> list[dict]:
 
 def listar_todos_eventos() -> list[dict]:
     """Retorna todos os eventos ordenados por data."""
-    conn = get_connection()
-    rows = conn.execute(
-        "SELECT * FROM agenda ORDER BY data ASC, hora ASC NULLS LAST"
-    ).fetchall()
-    conn.close()
+    with get_cursor() as cur:
+        cur.execute(
+            "SELECT * FROM agenda ORDER BY data ASC, hora ASC NULLS LAST"
+        )
+        rows = cur.fetchall()
     return [dict(r) for r in rows]
 
 
@@ -129,12 +127,8 @@ def atualizar_evento(evento_id: int, **campos) -> dict | None:
     colunas = ", ".join(f"{c} = ?" for c in campos)
     valores = list(campos.values()) + [evento_id]
 
-    conn = get_connection()
-    with conn:
-        conn.execute(
-            f"UPDATE agenda SET {colunas} WHERE id = ?", valores
-        )
-    conn.close()
+    with get_cursor() as cur:
+        cur.execute(f"UPDATE agenda SET {colunas} WHERE id = ?", valores)
     return buscar_evento_por_id(evento_id)
 
 
@@ -145,10 +139,7 @@ def remover_evento(evento_id: int) -> bool:
     Remove um evento pelo ID.
     Retorna True se removido, False se não encontrado.
     """
-    conn = get_connection()
-    with conn:
-        cursor = conn.execute(
-            "DELETE FROM agenda WHERE id = ?", (evento_id,)
-        )
-    conn.close()
-    return cursor.rowcount > 0
+    with get_cursor() as cur:
+        cur.execute("DELETE FROM agenda WHERE id = ?", (evento_id,))
+        removido = cur.rowcount > 0
+    return removido

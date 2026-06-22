@@ -3,7 +3,7 @@
 # Assim o resto do projeto importa assim:
 #   from src.storage import adicionar_tarefa, listar_eventos_hoje
 
-from .database import get_connection, criar_tabelas
+from .database import get_connection, get_cursor, criar_tabelas
 from .agenda import (
     adicionar_evento,
     buscar_evento_por_id,
