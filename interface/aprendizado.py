@@ -14,6 +14,23 @@ import streamlit as st
 from src.utils import extrair_json as _extrair_json
 
 
+def _classificar_feedback(feedback: str) -> str:
+    """
+    Normaliza o texto de feedback da avaliação em uma classificação canônica:
+    'correta', 'parcial' ou 'incorreta'.
+
+    A avaliação (AVALIACAO_SYSTEM) instrui o Gemma a iniciar a resposta com
+    CORRETA / PARCIALMENTE / INCORRETA. Mapeamos esse prefixo; qualquer outro
+    formato cai em 'incorreta' por segurança (sinaliza tentativa não bem-sucedida).
+    """
+    fb_up = (feedback or "").strip().upper()
+    if fb_up.startswith("CORRETA"):
+        return "correta"
+    if fb_up.startswith("PARCIALMENTE"):
+        return "parcial"
+    return "incorreta"
+
+
 # ── Active Recall: geração e avaliação ────────────────────────────────────────
 
 def gerar_pergunta_recall(topico: str, dificuldade: str, k: int = 3) -> dict:
@@ -187,6 +204,16 @@ def render():
                                     resposta,
                                 )
                             st.session_state["recall_feedback"] = feedback
+
+                            # Item 12 — registra o desempenho UMA vez, aqui no
+                            # handler do clique (não no bloco de render abaixo,
+                            # que reexecuta a cada rerun e duplicaria o registro).
+                            from src.storage import registrar_tentativa
+                            classificacao = _classificar_feedback(feedback)
+                            registrar_tentativa(
+                                topico=st.session_state.get("recall_topico", ""),
+                                classificacao=classificacao,
+                            )
                         else:
                             st.warning("Digite sua resposta antes de verificar.")
                 with col_b:
@@ -196,19 +223,48 @@ def render():
                 # Feedback da avaliação (na própria aba)
                 if st.session_state.get("recall_feedback"):
                     fb = st.session_state["recall_feedback"]
-                    fb_up = fb.upper()
-                    if fb_up.startswith("CORRETA"):
+                    classificacao = _classificar_feedback(fb)
+                    if classificacao == "correta":
                         st.success(f"**Avaliação:** {fb}")
-                    elif fb_up.startswith("PARCIALMENTE"):
+                    elif classificacao == "parcial":
                         st.warning(f"**Avaliação:** {fb}")
-                    elif fb_up.startswith("INCORRETA"):
-                        st.error(f"**Avaliação:** {fb}")
                     else:
-                        st.info(f"**Avaliação:** {fb}")
+                        st.error(f"**Avaliação:** {fb}")
 
                 # Gabarito real (sob demanda)
                 if st.session_state.get("recall_show"):
                     st.success(f"💡 **Gabarito:** {st.session_state.get('recall_gabarito', '—')}")
+
+        # ── Dificuldades identificadas (histórico persistido) ─────────────────
+        # Item 12: lê o desempenho agregado por tópico e destaca os mais difíceis.
+        # Renderiza fora do bloco de prática para aparecer mesmo sem índice ativo.
+        from src.storage import resumo_por_topico, total_tentativas, limpar_desempenho
+
+        if total_tentativas() > 0:
+            st.markdown("---")
+            col_h, col_r = st.columns([4, 1])
+            with col_h:
+                st.markdown("### 📊 Suas dificuldades identificadas")
+                st.caption("Aproveitamento por tópico, com base no seu histórico de recordação ativa.")
+            with col_r:
+                if st.button("🗑 Limpar histórico", use_container_width=True, key="limpar_desempenho"):
+                    limpar_desempenho()
+                    st.rerun()
+
+            for r in resumo_por_topico():
+                aprov = r["aproveitamento"]
+                cor = "#34d399" if aprov >= 70 else ("#fbbf24" if aprov >= 40 else "#f87171")
+                st.markdown(f"""
+                <div class="jarvis-card" style="border-left:4px solid {cor};">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div style="font-size:1rem;font-weight:600;">{r["topico"]}</div>
+                        <div style="color:{cor};font-weight:700;">{aprov:.0f}%</div>
+                    </div>
+                    <div style="color:#64748b;font-size:.78rem;margin-top:4px;">
+                        {r["total"]} tentativa(s) · ✅ {r["corretas"]} · ◐ {r["parciais"]} · ✗ {r["incorretas"]}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
 
     # ── Exercícios (múltipla escolha) ─────────────────────────────────────────
     with tab_exercicios:

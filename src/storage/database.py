@@ -95,6 +95,13 @@ def criar_tabelas():
                 criado_em   TEXT    NOT NULL DEFAULT (datetime('now', 'localtime')),
                 concluido_em TEXT               -- preenchido ao marcar como concluída
             );
+
+            CREATE TABLE IF NOT EXISTS desempenho_recall (
+                id             INTEGER PRIMARY KEY AUTOINCREMENT,
+                topico         TEXT    NOT NULL DEFAULT 'geral',
+                classificacao  TEXT    NOT NULL,  -- correta, parcial, incorreta
+                criado_em      TEXT    NOT NULL DEFAULT (datetime('now', 'localtime'))
+            );
         """)
 
 

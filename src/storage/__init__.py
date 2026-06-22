@@ -26,3 +26,9 @@ from .tarefas import (
     atualizar_tarefa,
     remover_tarefa,
 )
+from .desempenho import (
+    registrar_tentativa,
+    resumo_por_topico,
+    total_tentativas,
+    limpar_desempenho,
+)

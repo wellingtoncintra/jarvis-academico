@@ -74,6 +74,14 @@ def render():
                         # Usa st.chat_message para renderizar markdown corretamente
                         with st.chat_message("assistant", avatar="🤖"):
                             st.markdown(content)
+                            # Item 13 — rodapé discreto com as fontes consultadas
+                            fontes = msg.get("fontes") or []
+                            if fontes:
+                                st.markdown(
+                                    f'<div style="color:#64748b;font-size:.72rem;margin-top:6px;">'
+                                    f'📎 Fontes: {", ".join(fontes)}</div>',
+                                    unsafe_allow_html=True,
+                                )
                     elif role == "tool_call":
                         st.markdown(
                             f'<div class="tool-badge">⚙ {content}</div>',
@@ -139,10 +147,24 @@ def render():
             for log in resultado["tool_logs"]:
                 st.session_state.tool_logs.append(log)
 
-            # Adiciona resposta do assistente
+            # Item 13 — citações inline: coleta as fontes dos materiais usados
+            # nesta rodada (logs de buscar_material_rag bem-sucedidos). Os chunks
+            # já vêm no resultado da tool; aqui extraímos apenas os nomes das
+            # fontes para exibir um rodapé discreto sob a resposta.
+            fontes = []
+            for log in resultado["tool_logs"]:
+                if log.get("tool") == "buscar_material_rag" and log.get("status") == "ok":
+                    chunks = (log.get("resultado") or {}).get("chunks", []) or []
+                    for c in chunks:
+                        fonte = c.get("fonte")
+                        if fonte and fonte not in fontes:
+                            fontes.append(fonte)
+
+            # Adiciona resposta do assistente (com fontes, quando houver)
             st.session_state.messages.append({
                 "role":    "assistant",
                 "content": resultado["resposta"],
+                "fontes":  fontes,
             })
 
             st.rerun()
