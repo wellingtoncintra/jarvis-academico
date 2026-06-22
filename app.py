@@ -2,6 +2,10 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+# Configura o logging (console + arquivo) uma única vez, antes de qualquer página.
+from src.logging_config import setup_logging
+setup_logging()
+
 import streamlit as st
 
 st.set_page_config(

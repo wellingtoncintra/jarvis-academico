@@ -3,7 +3,6 @@ interface/chat.py — Chat principal com histórico persistido no session_state.
 """
 
 import streamlit as st
-import datetime
 from src.agent import processar_mensagem
 
 
@@ -36,7 +35,9 @@ def render():
             for log in reversed(st.session_state.tool_logs[-10:]):
                 status_class = "pill-ok" if log.get("status") == "ok" else "pill-err"
                 status_text  = "✓ ok"    if log.get("status") == "ok" else "✗ erro"
-                ts = log.get("ts", "")
+                ts = log.get("timestamp", "")
+                if "T" in ts:
+                    ts = ts.split("T")[1]  # só o horário (HH:MM:SS)
                 st.markdown(
                     f'<div class="jarvis-card" style="padding:10px 12px;">'
                     f'<div style="font-family:monospace;font-size:.75rem;color:#a78bfa;">⚙ {log["tool"]}</div>'
@@ -133,10 +134,9 @@ def render():
             # Atualiza histórico LLM para manter contexto entre mensagens
             st.session_state.historico_llm = resultado["historico"]
 
-            # Registra logs de tools com timestamp
-            ts = datetime.datetime.now().strftime("%H:%M:%S")
+            # Os logs já vêm com timestamp ISO real (gerado no agente, no
+            # momento da chamada). Apenas empilha na sessão, sem sobrescrever.
             for log in resultado["tool_logs"]:
-                log["ts"] = ts
                 st.session_state.tool_logs.append(log)
 
             # Adiciona resposta do assistente

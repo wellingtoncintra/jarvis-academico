@@ -35,6 +35,7 @@ from dotenv import load_dotenv
 
 from src.llm.client import get_llm_client, get_model_name
 from src.tools import executar_tool, TOOLS_DEF
+from src.logging_config import registrar_tool_log
 
 load_dotenv()
 
@@ -201,7 +202,11 @@ def processar_mensagem(
             status    = "erro"
             logger.error(f"[agente] Erro na tool '{nome}': {e}")
 
-        tool_logs.append({"tool": nome, "args": args, "resultado": resultado, "status": status})
+        # Persiste o registro estruturado (ferramenta/entrada/saída/status) em
+        # logs/tool_calls.jsonl e reaproveita o mesmo dict — agora com timestamp
+        # ISO gerado aqui, no momento real da chamada — na lista da sessão.
+        registro = registrar_tool_log(tool=nome, args=args, resultado=resultado, status=status)
+        tool_logs.append(registro)
 
         # Injeta resultado no contexto usando apenas roles user/assistant
         mensagens.append({"role": "assistant", "content": texto})
