@@ -34,7 +34,8 @@ O JARVIS integra três componentes principais:
 | **LLM** | Gemma 3 12B (servidor do professor) | Geração de respostas e decisão de tool calling |
 | **RAG** | FAISS + BM25 + SentenceTransformers | Consulta a materiais de estudo indexados |
 | **Tool Calling** | Prompt engineering + `chat.completions` | Execução de ferramentas via JSON estruturado |
-| **Storage** | SQLite | Persistência de agenda e tarefas |
+| **Storage** | SQLite | Persistência de agenda, tarefas e desempenho de aprendizado |
+| **Logging** | Loguru + JSONL | Log de aplicação e registro estruturado de tool calls |
 | **Interface** | Streamlit | UI web com tema dark |
 
 ---
@@ -56,8 +57,13 @@ Usuário (Streamlit)
    ├── rag.py            ← buscar_material_rag
    └── planejamento.py   ← planejar_estudos
        ↓
-   src/storage/          ← SQLite (agenda e tarefas)
+   src/storage/          ← SQLite (agenda, tarefas, desempenho)
    src/rag/              ← FAISS + BM25 (materiais de estudo)
+
+Módulos transversais:
+   src/prompts/          ← prompts centralizados por domínio
+   src/logging_config.py ← log de aplicação + tool_calls.jsonl
+   src/utils.py          ← utilitários compartilhados
 ```
 
 ### Loop do Agente
@@ -83,7 +89,7 @@ O loop repete até a LLM responder em texto puro (sem JSON de tool), com limite 
 **3.1 Consulta a materiais de estudo (RAG)**
 - Upload de PDFs via interface web
 - Carregamento, chunking, embedding e indexação automáticos
-- Busca híbrida (semântica + lexical) com reranking por score combinado
+- Busca híbrida (semântica + lexical) com fusão ponderada de scores
 - Respostas geradas pelo Gemma com base nos trechos recuperados
 
 **3.2 Agenda acadêmica**
@@ -109,38 +115,77 @@ O loop repete até a LLM responder em texto puro (sem JSON de tool), com limite 
 | `buscar_material_rag` | "Explique regressão logística" | FAISS + BM25 → Gemma |
 | `planejar_estudos` | "Monte um plano para a prova" | Combina agenda + tarefas + RAG |
 
+### Trabalho 2
+
+**3.4 Planejamento de estudos**
+- A tool `planejar_estudos` combina as **três fontes** exigidas: agenda (eventos e provas próximas), tarefas (pendentes e urgentes) e materiais (trechos relevantes via RAG)
+- Responde a pedidos como "monte um plano para a prova" ou "o que priorizar hoje?"
+- A LLM recebe o contexto consolidado e elabora o plano
+
+**Melhorias de aprendizado (2 funcionalidades, ≥1 interativa)**
+- **Active Recall (interativa):** o sistema gera uma pergunta a partir dos materiais indexados, o aluno responde, e o Gemma avalia a resposta classificando-a em correta / parcialmente correta / incorreta. Atende ao requisito de "o sistema pergunta e avalia".
+- **Geração de exercícios:** questões de múltipla escolha criadas a partir dos materiais (RAG), com gabarito e explicação por questão.
+- **Identificação de dificuldades:** cada tentativa de Active Recall é persistida (tópico + classificação) e o desempenho é agregado por tópico, destacando os assuntos com menor aproveitamento — transformando o feedback efêmero em histórico acionável.
+
+As perguntas e exercícios são **ancorados no RAG**: nascem dos materiais que o aluno indexou, não do conhecimento geral da LLM.
+
+**Avaliação e análise de erros**
+- Artefato com 10 perguntas avaliadas (pergunta, chunks recuperados, resposta, classificação e justificativa) em `data/evaluation/avaliacao_rag.json`
+- Análise de pelo menos 3 falhas (tipo, causa e possível solução)
+- Visualização direta no app pela aba **Avaliação**
+
+**Citações inline**
+- As respostas do chat baseadas em materiais exibem um rodapé discreto com as fontes consultadas (📎 Fontes: ...), aumentando a transparência sobre a origem da informação
+
+**Logging persistido**
+- Log de aplicação em `logs/jarvis.log` (rotação automática) via Loguru
+- Registro estruturado de tool calling em `logs/tool_calls.jsonl` (uma linha por chamada: ferramenta, entrada, saída, status, timestamp), além da visualização em sessão na aba **Logs**
+
 ---
 
 ## Estrutura do Projeto
 
 ```
 jarvis-academico/
-├── app.py                      # Entry point Streamlit
+├── app.py                      # Entry point Streamlit (inicializa logging)
 ├── .env                        # Credenciais (não versionado)
 ├── requirements.txt
 │
 ├── interface/                  # Páginas Streamlit
-│   ├── chat.py                 # Chat com histórico e tool call sidebar
+│   ├── chat.py                 # Chat com histórico, tool calls e citações inline
 │   ├── agenda.py               # Visualização e cadastro de eventos
 │   ├── tarefas.py              # Gerenciamento de tarefas
 │   ├── rag.py                  # Upload e indexação de documentos
 │   ├── planejamento.py         # Planejamento de estudos
-│   └── logs.py                 # Logs de tool calling
+│   ├── aprendizado.py          # Active Recall, exercícios e dificuldades
+│   ├── avaliacao.py            # Painel de avaliação e análise de erros
+│   └── logs.py                 # Logs de tool calling (sessão)
 │
 ├── src/
 │   ├── agent.py                # Orquestrador: loop de tool calling
+│   ├── utils.py                # Utilitários (extração robusta de JSON)
+│   ├── logging_config.py       # Setup de logging + persistência de tool calls
 │   ├── llm/
 │   │   └── client.py           # Cliente OpenAI (chat.completions)
 │   ├── rag/
-│   │   ├── loader.py           # PDF → Markdown (pymupdf4llm)
+│   │   ├── loader.py           # PDF → Markdown (Docling)
 │   │   ├── chunker.py          # Estratégia híbrida de chunking
 │   │   ├── embedder.py         # FAISS + BM25 + SentenceTransformers
 │   │   ├── retriever.py        # Busca e geração de resposta RAG
+│   │   ├── paths.py            # Caminhos dos índices + checagem (módulo leve)
 │   │   └── indexer.py          # Script de indexação standalone
 │   ├── storage/
-│   │   ├── database.py         # Conexão SQLite + criação de tabelas
+│   │   ├── database.py         # Conexão SQLite (context manager) + tabelas
 │   │   ├── agenda.py           # CRUD de eventos
-│   │   └── tarefas.py          # CRUD de tarefas
+│   │   ├── tarefas.py          # CRUD de tarefas
+│   │   └── desempenho.py       # Persistência do desempenho de Active Recall
+│   ├── prompts/                # Prompts centralizados por domínio
+│   │   ├── agent.py            # System prompt e diretrizes do agente
+│   │   ├── rag.py              # Prompt de geração de resposta RAG
+│   │   ├── aprendizado.py      # Prompts de Active Recall e exercícios
+│   │   └── planejamento.py     # Prompt de planejamento de estudos
+│   ├── evaluation/
+│   │   └── gerar_recuperacao.py # Gera a recuperação das perguntas de avaliação
 │   └── tools/
 │       ├── agenda.py           # Tools: consultar_agenda, adicionar_agenda
 │       ├── tarefas.py          # Tool: gerenciar_tarefas
@@ -151,12 +196,17 @@ jarvis-academico/
 ├── data/
 │   ├── raw/                    # PDFs originais do dataset
 │   ├── processed/              # Índices FAISS, BM25 e chunks serializados
-│   ├── jarvis.db               # Banco SQLite (agenda e tarefas)
+│   ├── evaluation/             # Artefato de avaliação (perguntas + recuperação)
+│   ├── jarvis.db               # Banco SQLite (não versionado)
 │   └── DATASET.md              # Documentação do dataset
+│
+├── logs/                       # Logs de aplicação e tool calls (não versionado)
 │
 └── tests/
     ├── test_storage.py         # Testes de CRUD no SQLite
-    └── test_rag.py             # Testes do pipeline de chunking
+    ├── test_rag.py             # Testes do pipeline de chunking
+    ├── test_utils.py           # Testes da extração de JSON
+    └── test_desempenho.py      # Testes da persistência de desempenho
 ```
 
 ---
@@ -221,18 +271,20 @@ python src/rag/indexer.py
 
 ## Executando os Testes
 
+A suíte cobre o storage (CRUD de agenda e tarefas), o pipeline de chunking do RAG, a extração de JSON e a persistência de desempenho.
+
 ```bash
 # Todos os testes
 pytest tests/ -v
 
-# Só storage
-pytest tests/test_storage.py -v
-
-# Só RAG/chunker
-pytest tests/test_rag.py -v
+# Por módulo
+pytest tests/test_storage.py -v      # CRUD no SQLite
+pytest tests/test_rag.py -v          # pipeline de chunking
+pytest tests/test_utils.py -v        # extração de JSON
+pytest tests/test_desempenho.py -v   # persistência de desempenho
 ```
 
-Os testes de storage usam um banco separado (`data/test_jarvis.db`) para não contaminar os dados reais.
+Os testes que tocam o banco usam um arquivo SQLite temporário isolado (via `tmp_path` do pytest), definido antes da importação dos módulos de storage, de modo que nunca tocam o `data/jarvis.db` real.
 
 ---
 
