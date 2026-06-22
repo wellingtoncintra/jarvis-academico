@@ -142,7 +142,7 @@ def render():
     st.markdown("# 🧠 Melhoria de Aprendizagem")
     st.caption("Pratique com perguntas de recordação ativa e exercícios gerados dos seus materiais.")
 
-    from src.rag.embedder import indices_existem
+    from src.rag.paths import indices_existem
 
     tab_recall, tab_exercicios = st.tabs(["🧠 Active Recall", "✏️ Exercícios"])
 

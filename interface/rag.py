@@ -87,7 +87,7 @@ def render():
 
     # ── Gerenciar ─────────────────────────────────────────────────────────────
     with tab_gerenciar:
-        from src.rag.embedder import indices_existem
+        from src.rag.paths import indices_existem
 
         pdfs = sorted(RAW_DIR.glob("*.pdf"))
 
