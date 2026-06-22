@@ -31,3 +31,6 @@ build/
 Thumbs.db
 
 *__pycache__/
+
+
+src/storage/__pycache__/
