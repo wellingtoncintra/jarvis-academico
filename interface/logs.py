@@ -40,7 +40,9 @@ def render():
         ok      = log.get("status") == "ok"
         cor     = "#34d399" if ok else "#f87171"
         simbolo = "✓" if ok else "✗"
-        ts      = log.get("ts", "")
+        ts      = log.get("timestamp", "")
+        if "T" in ts:
+            ts = ts.split("T")[1]  # só o horário (HH:MM:SS)
 
         with st.expander(f"⚙ `{log['tool']}` — {ts}", expanded=False):
             c1, c2 = st.columns(2)

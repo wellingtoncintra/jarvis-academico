@@ -16,17 +16,16 @@ import pickle
 import numpy as np
 import faiss
 
-from pathlib import Path
 from loguru import logger
 from sentence_transformers import SentenceTransformer
 from rank_bm25 import BM25Okapi
 
 # ── Configurações ──────────────────────────────────────────────────────────────
 MODELO_EMBEDDING = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-INDICE_DIR       = Path("data/processed")
-FAISS_PATH       = INDICE_DIR / "indice.faiss"
-BM25_PATH        = INDICE_DIR / "indice_bm25.pkl"
-CHUNKS_PATH      = INDICE_DIR / "chunks.pkl"
+
+# Caminhos dos índices e a checagem de existência vêm do módulo leve src.rag.paths
+# (só pathlib), para que importá-los não obrigue a carregar este módulo pesado.
+from .paths import INDICE_DIR, FAISS_PATH, BM25_PATH, CHUNKS_PATH, indices_existem
 
 # Modelo carregado uma única vez em memória
 _modelo: SentenceTransformer | None = None
@@ -154,9 +153,8 @@ def carregar_indices() -> tuple:
     return chunks, indice_faiss, indice_bm25, matriz
 
 
-def indices_existem() -> bool:
-    """Verifica se os índices já foram gerados."""
-    return FAISS_PATH.exists() and BM25_PATH.exists() and CHUNKS_PATH.exists()
+# indices_existem() é importado de src.rag.paths (módulo leve) e permanece
+# disponível neste namespace para quem já importa de src.rag.embedder.
 
 
 # ── Indexação incremental ──────────────────────────────────────────────────────

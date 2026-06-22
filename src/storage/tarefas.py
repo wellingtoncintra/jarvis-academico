@@ -3,10 +3,13 @@ src/storage/tarefas.py
 
 Funções CRUD para a tabela de tarefas.
 Usadas diretamente pelas tools do agente.
+
+Todas as operações usam o context manager get_cursor() (em database.py),
+que garante commit/rollback e fechamento da conexão mesmo em caso de erro.
 """
 
 from datetime import datetime
-from .database import get_connection
+from .database import get_cursor
 
 
 # ─── CREATE ──────────────────────────────────────────────────────────────────
@@ -26,31 +29,26 @@ def adicionar_tarefa(
 
     Retorna a tarefa criada como dicionário.
     """
-    conn = get_connection()
-    with conn:
-        cursor = conn.execute(
+    with get_cursor() as cur:
+        cur.execute(
             """
             INSERT INTO tarefas (descricao, prazo, prioridade)
             VALUES (?, ?, ?)
             """,
             (descricao, prazo, prioridade),
         )
-        tarefa_id = cursor.lastrowid
+        tarefa_id = cur.lastrowid
 
-    tarefa = buscar_tarefa_por_id(tarefa_id)
-    conn.close()
-    return tarefa
+    return buscar_tarefa_por_id(tarefa_id)
 
 
 # ─── READ ─────────────────────────────────────────────────────────────────────
 
 def buscar_tarefa_por_id(tarefa_id: int) -> dict | None:
     """Retorna uma tarefa pelo ID ou None se não encontrada."""
-    conn = get_connection()
-    row = conn.execute(
-        "SELECT * FROM tarefas WHERE id = ?", (tarefa_id,)
-    ).fetchone()
-    conn.close()
+    with get_cursor() as cur:
+        cur.execute("SELECT * FROM tarefas WHERE id = ?", (tarefa_id,))
+        row = cur.fetchone()
     return dict(row) if row else None
 
 
@@ -59,52 +57,52 @@ def listar_tarefas_pendentes() -> list[dict]:
     Retorna todas as tarefas não concluídas,
     ordenadas por prioridade (alta → media → baixa) e prazo.
     """
-    conn = get_connection()
-    rows = conn.execute(
-        """
-        SELECT * FROM tarefas
-        WHERE concluida = 0
-        ORDER BY
-            CASE prioridade
-                WHEN 'alta'  THEN 1
-                WHEN 'media' THEN 2
-                WHEN 'baixa' THEN 3
-                ELSE 4
-            END,
-            prazo ASC NULLS LAST
-        """
-    ).fetchall()
-    conn.close()
+    with get_cursor() as cur:
+        cur.execute(
+            """
+            SELECT * FROM tarefas
+            WHERE concluida = 0
+            ORDER BY
+                CASE prioridade
+                    WHEN 'alta'  THEN 1
+                    WHEN 'media' THEN 2
+                    WHEN 'baixa' THEN 3
+                    ELSE 4
+                END,
+                prazo ASC NULLS LAST
+            """
+        )
+        rows = cur.fetchall()
     return [dict(r) for r in rows]
 
 
 def listar_tarefas_concluidas() -> list[dict]:
     """Retorna todas as tarefas já concluídas."""
-    conn = get_connection()
-    rows = conn.execute(
-        "SELECT * FROM tarefas WHERE concluida = 1 ORDER BY concluido_em DESC"
-    ).fetchall()
-    conn.close()
+    with get_cursor() as cur:
+        cur.execute(
+            "SELECT * FROM tarefas WHERE concluida = 1 ORDER BY concluido_em DESC"
+        )
+        rows = cur.fetchall()
     return [dict(r) for r in rows]
 
 
 def listar_todas_tarefas() -> list[dict]:
     """Retorna todas as tarefas (pendentes + concluídas)."""
-    conn = get_connection()
-    rows = conn.execute(
-        """
-        SELECT * FROM tarefas
-        ORDER BY concluida ASC,
-            CASE prioridade
-                WHEN 'alta'  THEN 1
-                WHEN 'media' THEN 2
-                WHEN 'baixa' THEN 3
-                ELSE 4
-            END,
-            prazo ASC NULLS LAST
-        """
-    ).fetchall()
-    conn.close()
+    with get_cursor() as cur:
+        cur.execute(
+            """
+            SELECT * FROM tarefas
+            ORDER BY concluida ASC,
+                CASE prioridade
+                    WHEN 'alta'  THEN 1
+                    WHEN 'media' THEN 2
+                    WHEN 'baixa' THEN 3
+                    ELSE 4
+                END,
+                prazo ASC NULLS LAST
+            """
+        )
+        rows = cur.fetchall()
     return [dict(r) for r in rows]
 
 
@@ -117,9 +115,8 @@ def concluir_tarefa(tarefa_id: int) -> dict | None:
     """
     agora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    conn = get_connection()
-    with conn:
-        conn.execute(
+    with get_cursor() as cur:
+        cur.execute(
             """
             UPDATE tarefas
             SET concluida = 1, concluido_em = ?
@@ -127,15 +124,13 @@ def concluir_tarefa(tarefa_id: int) -> dict | None:
             """,
             (agora, tarefa_id),
         )
-    conn.close()
     return buscar_tarefa_por_id(tarefa_id)
 
 
 def reabrir_tarefa(tarefa_id: int) -> dict | None:
     """Desfaz a conclusão de uma tarefa, voltando ao estado pendente."""
-    conn = get_connection()
-    with conn:
-        conn.execute(
+    with get_cursor() as cur:
+        cur.execute(
             """
             UPDATE tarefas
             SET concluida = 0, concluido_em = NULL
@@ -143,7 +138,6 @@ def reabrir_tarefa(tarefa_id: int) -> dict | None:
             """,
             (tarefa_id,),
         )
-    conn.close()
     return buscar_tarefa_por_id(tarefa_id)
 
 
@@ -160,12 +154,8 @@ def atualizar_tarefa(tarefa_id: int, **campos) -> dict | None:
     colunas = ", ".join(f"{c} = ?" for c in campos)
     valores = list(campos.values()) + [tarefa_id]
 
-    conn = get_connection()
-    with conn:
-        conn.execute(
-            f"UPDATE tarefas SET {colunas} WHERE id = ?", valores
-        )
-    conn.close()
+    with get_cursor() as cur:
+        cur.execute(f"UPDATE tarefas SET {colunas} WHERE id = ?", valores)
     return buscar_tarefa_por_id(tarefa_id)
 
 
@@ -176,10 +166,7 @@ def remover_tarefa(tarefa_id: int) -> bool:
     Remove uma tarefa pelo ID.
     Retorna True se removida, False se não encontrada.
     """
-    conn = get_connection()
-    with conn:
-        cursor = conn.execute(
-            "DELETE FROM tarefas WHERE id = ?", (tarefa_id,)
-        )
-    conn.close()
-    return cursor.rowcount > 0
+    with get_cursor() as cur:
+        cur.execute("DELETE FROM tarefas WHERE id = ?", (tarefa_id,))
+        removida = cur.rowcount > 0
+    return removida

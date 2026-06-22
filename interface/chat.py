@@ -3,7 +3,6 @@ interface/chat.py — Chat principal com histórico persistido no session_state.
 """
 
 import streamlit as st
-import datetime
 from src.agent import processar_mensagem
 
 
@@ -36,7 +35,9 @@ def render():
             for log in reversed(st.session_state.tool_logs[-10:]):
                 status_class = "pill-ok" if log.get("status") == "ok" else "pill-err"
                 status_text  = "✓ ok"    if log.get("status") == "ok" else "✗ erro"
-                ts = log.get("ts", "")
+                ts = log.get("timestamp", "")
+                if "T" in ts:
+                    ts = ts.split("T")[1]  # só o horário (HH:MM:SS)
                 st.markdown(
                     f'<div class="jarvis-card" style="padding:10px 12px;">'
                     f'<div style="font-family:monospace;font-size:.75rem;color:#a78bfa;">⚙ {log["tool"]}</div>'
@@ -73,6 +74,14 @@ def render():
                         # Usa st.chat_message para renderizar markdown corretamente
                         with st.chat_message("assistant", avatar="🤖"):
                             st.markdown(content)
+                            # Item 13 — rodapé discreto com as fontes consultadas
+                            fontes = msg.get("fontes") or []
+                            if fontes:
+                                st.markdown(
+                                    f'<div style="color:#64748b;font-size:.72rem;margin-top:6px;">'
+                                    f'📎 Fontes: {", ".join(fontes)}</div>',
+                                    unsafe_allow_html=True,
+                                )
                     elif role == "tool_call":
                         st.markdown(
                             f'<div class="tool-badge">⚙ {content}</div>',
@@ -133,16 +142,29 @@ def render():
             # Atualiza histórico LLM para manter contexto entre mensagens
             st.session_state.historico_llm = resultado["historico"]
 
-            # Registra logs de tools com timestamp
-            ts = datetime.datetime.now().strftime("%H:%M:%S")
+            # Os logs já vêm com timestamp ISO real (gerado no agente, no
+            # momento da chamada). Apenas empilha na sessão, sem sobrescrever.
             for log in resultado["tool_logs"]:
-                log["ts"] = ts
                 st.session_state.tool_logs.append(log)
 
-            # Adiciona resposta do assistente
+            # Item 13 — citações inline: coleta as fontes dos materiais usados
+            # nesta rodada (logs de buscar_material_rag bem-sucedidos). Os chunks
+            # já vêm no resultado da tool; aqui extraímos apenas os nomes das
+            # fontes para exibir um rodapé discreto sob a resposta.
+            fontes = []
+            for log in resultado["tool_logs"]:
+                if log.get("tool") == "buscar_material_rag" and log.get("status") == "ok":
+                    chunks = (log.get("resultado") or {}).get("chunks", []) or []
+                    for c in chunks:
+                        fonte = c.get("fonte")
+                        if fonte and fonte not in fontes:
+                            fontes.append(fonte)
+
+            # Adiciona resposta do assistente (com fontes, quando houver)
             st.session_state.messages.append({
                 "role":    "assistant",
                 "content": resultado["resposta"],
+                "fontes":  fontes,
             })
 
             st.rerun()
