@@ -278,6 +278,17 @@ A solução adotada foi descrever as ferramentas no system prompt e instruir o m
 
 A geração dinâmica do system prompt (`_construir_tools_prompt()` em `agent.py`) garante que novas ferramentas adicionadas em `src/tools/` aparecem automaticamente no prompt sem alteração do agente.
 
+**Por que uma única `gerenciar_tarefas` em vez de três ferramentas separadas?**
+
+A especificação cita `adicionar_tarefa`, `listar_tarefas` e `concluir_tarefa` como exemplos de ferramentas. Optamos conscientemente por consolidá-las em uma única ferramenta `gerenciar_tarefas`, parametrizada por um campo `acao` (`adicionar`, `listar_pendentes`, `listar_todas`, `concluir`). A decisão é técnica, não de conveniência:
+
+- **A decisão de chamada é feita por prompt engineering, não por tool calling nativo.** O Gemma 12B escolhe a ferramenta montando um JSON a partir da descrição no system prompt. Quanto menor a quantidade de ferramentas expostas, menor a superfície de ambiguidade e menor a chance de o modelo escolher errado — algo especialmente relevante para um modelo desse porte sem suporte nativo a tools. Agrupar operações de um mesmo domínio (tarefas) em uma ferramenta com sub-ação reduz a carga de decisão do modelo.
+- **O loop do agente tem limite de 5 iterações** (`MAX_ITERACOES`). Manter o número de ferramentas enxuto preserva margem nesse orçamento e torna o comportamento mais previsível e testável.
+- **O padrão "ferramenta com sub-ação" é legítimo** e amplamente usado em catálogos de ferramentas para LLMs. A lógica de negócio permanece totalmente separada: `gerenciar_tarefas` é uma casca fina sobre as funções de `src/storage/tarefas.py` (`adicionar_tarefa`, `listar_tarefas_pendentes`, `concluir_tarefa`, etc.), que já são distintas e testáveis individualmente.
+- **O requisito mínimo de 5 ferramentas é atendido**: `consultar_agenda`, `adicionar_agenda`, `gerenciar_tarefas`, `buscar_material_rag` e `planejar_estudos`.
+
+Em resumo, as três operações de tarefa continuam existindo e sendo decididas pela LLM; apenas são expostas sob uma única ferramenta para maximizar a confiabilidade da escolha pelo modelo.
+
 ---
 
 ## IAs Utilizadas
