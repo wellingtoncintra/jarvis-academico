@@ -1,0 +1,343 @@
+{
+  "data_geracao": "2026-06-21",
+  "metodo_recuperacao": "hibrido+rerank",
+  "alpha": 0.6,
+  "k_base": 3,
+  "k_comparativo": 6,
+  "resultados": [
+    {
+      "id": "Q01",
+      "pergunta": "O que é um autômato finito determinístico e quais são seus componentes?",
+      "k_efetivo": 3,
+      "documentos_recuperados": [
+        {
+          "chunk_id": "afnd_chunk_0000",
+          "fonte": "afnd",
+          "score": 0.9742,
+          "metodo": "hibrido+rerank",
+          "trecho": "## Autômato Finito não-Determinístico Um AFD é uma máquina determinística : a partir de um estado e um símbolo, sabemos qual é o próximo estado usando uma função de transição δ ( p, a ) = q : isto é chamdo computação determinística . Um autômato finito não determinístico (AFND) é uma máquina não determinística : pod...",
+          "score_hibrido": 0.972679
+        },
+        {
+          "chunk_id": "LF-41-79_chunk_0071",
+          "fonte": "LF-41-79",
+          "score": 0.863001,
+          "metodo": "hibrido+rerank",
+          "trecho": "- 5. Sejam M e M ′ autômatos finitos determinísticos no alfabeto Σ cujos elementos são (Σ , Q, q 1 , F, δ ) e (Σ , Q ′ , q ′ 1 , F ′ , δ ′ ) , respectivamente. Defina um novo autômato finito determinístico N construído a partir de M e M ′ como segue:",
+          "score_hibrido": 0.876993
+        },
+        {
+          "chunk_id": "LF-41-79_chunk_0000",
+          "fonte": "LF-41-79",
+          "score": 0.189661,
+          "metodo": "hibrido+rerank",
+          "trecho": "## CAPíTULO 5 ## Autômatos finitos não determinísticos - 1. Desenhe o diagrama de estados e descreva a linguagem aceita por cada um dos seguintes autômatos finitos não determinísticos. Em cada caso o estado inicial é q 1 . - (b) δ 2 = δ 1 e F 2 = { q 1 , q 2 , q 3 } . - (c) F 3 = { q 2 } e a função de transição é da...",
+          "score_hibrido": 0.934137
+        }
+      ]
+    },
+    {
+      "id": "Q02",
+      "pergunta": "Como um AFD aceita ou rejeita uma palavra?",
+      "k_efetivo": 3,
+      "documentos_recuperados": [
+        {
+          "chunk_id": "AFD_chunk_0002",
+          "fonte": "AFD",
+          "score": 0.912224,
+          "metodo": "hibrido+rerank",
+          "trecho": "Dizemos que: - 1. M aceita x se ∆( x ) ∈ F . Denotamos isso por M ( x ) = aceita ; - 2. M rejeita x se ¬ ( M ( x ) = aceita ). Denotamos isso por M ( x ) = rejeita ; - 3. M reconhece a linguagem L ( M ) = { x ∈ Σ ∗ : M ( x ) = aceita } ; - 4. M e N são equivalentes se L ( M ) = L ( N ). Denotamos isso por M ≡ N ; - ...",
+          "score_hibrido": 0.797712
+        },
+        {
+          "chunk_id": "AFD_chunk_0012",
+          "fonte": "AFD",
+          "score": 0.739729,
+          "metodo": "hibrido+rerank",
+          "trecho": "<!-- image --> ## Implementação Um AFD pode ser visto como um formalismo reconhecedor para representar uma linguagem, ou seja, uma máquina que aceita cadeias de uma determinada linguagem. Esse mecanismo pode ser implementado por um programa de computador. A seguir mostramos um exemplo em python que devolve True se u...",
+          "score_hibrido": 0.921511
+        },
+        {
+          "chunk_id": "afnd_chunk_0012",
+          "fonte": "afnd",
+          "score": 0.245291,
+          "metodo": "hibrido+rerank",
+          "trecho": "Teorema 1. Seja A uma linguagem. Existe um AFD que reconhece A se e somente se existe um AFND que reconhece A . <!-- image --> Prova . Mostrar que se existe um AFD que reconhece A , então existe um AFND que reconhece A é imediato, pois há uma maneira trivial de transformar um AFD em um AFND.",
+          "score_hibrido": 0.749183
+        }
+      ]
+    },
+    {
+      "id": "Q03",
+      "pergunta": "O que diferencia um AFND de um AFD?",
+      "k_efetivo": 6,
+      "documentos_recuperados": [
+        {
+          "chunk_id": "afnd_chunk_0000",
+          "fonte": "afnd",
+          "score": 0.997091,
+          "metodo": "hibrido+rerank",
+          "trecho": "## Autômato Finito não-Determinístico Um AFD é uma máquina determinística : a partir de um estado e um símbolo, sabemos qual é o próximo estado usando uma função de transição δ ( p, a ) = q : isto é chamdo computação determinística . Um autômato finito não determinístico (AFND) é uma máquina não determinística : pod...",
+          "score_hibrido": 0.725567
+        },
+        {
+          "chunk_id": "afnd_chunk_0010",
+          "fonte": "afnd",
+          "score": 0.996192,
+          "metodo": "hibrido+rerank",
+          "trecho": "## Equivalência entre AFD e AFND Mostrar a equivalência entre AFD e AFND corresponde a mostrar que tudo o que pode ser computado por um AFD também pode ser computado por um AFND e vice-versa. Para mostrar essa equivalência vamos construir, a partir de um AFD M , um AFND que reconhece L ( M ) e depois vamos construir...",
+          "score_hibrido": 0.996319
+        },
+        {
+          "chunk_id": "afnd_chunk_0008",
+          "fonte": "afnd",
+          "score": 0.99261,
+          "metodo": "hibrido+rerank",
+          "trecho": "## Exemplo Note que, exceto pela função de transição, a definição de AFD é a mesma de um AFND. A diferença na função de transição tornam muito diferentes essas máquinas.",
+          "score_hibrido": 0.904225
+        },
+        {
+          "chunk_id": "afnd_chunk_0012",
+          "fonte": "afnd",
+          "score": 0.953058,
+          "metodo": "hibrido+rerank",
+          "trecho": "Teorema 1. Seja A uma linguagem. Existe um AFD que reconhece A se e somente se existe um AFND que reconhece A . <!-- image --> Prova . Mostrar que se existe um AFD que reconhece A , então existe um AFND que reconhece A é imediato, pois há uma maneira trivial de transformar um AFD em um AFND.",
+          "score_hibrido": 0.845611
+        },
+        {
+          "chunk_id": "afnd_chunk_0013",
+          "fonte": "afnd",
+          "score": 0.693126,
+          "metodo": "hibrido+rerank",
+          "trecho": "Suponha então que existe um AFND N = ( Q, Σ ϵ , δ, q 0 , F ) que reconhece a linguagem A . Verifique que o AFD ( Q ′ , Σ , δ ′ , q ′ 0 , F ′ ) tal que",
+          "score_hibrido": 0.719139
+        },
+        {
+          "chunk_id": "afnd_chunk_0019",
+          "fonte": "afnd",
+          "score": 0.240275,
+          "metodo": "hibrido+rerank",
+          "trecho": "- (b) Mostre que há um AFD M com 2 n estados tal que L ( M ) = A n . - (c) Mostre que qualquer AFD M tal que L ( M ) = A n possui pelo menos 2 n estados. - 5. Considere a seguinte afirmação: Seja N um AFND que possui n estados e que não existe AFND com menos estados que reconhece L ( N ) . Então, um AFD que reconhec...",
+          "score_hibrido": 0.730958
+        }
+      ]
+    },
+    {
+      "id": "Q04",
+      "pergunta": "O que são transições vazias em AFND?",
+      "k_efetivo": 3,
+      "documentos_recuperados": [
+        {
+          "chunk_id": "afnd_chunk_0001",
+          "fonte": "afnd",
+          "score": 0.863248,
+          "metodo": "hibrido+rerank",
+          "trecho": "Exemplo 1. Antes de definir precisamente um AFND vejamos o seguinte diagrama N que aceitas cadeias terminadas em 11 e 101. <!-- image --> Os rótulos das 'setas' são símbolos em Σ ϵ := Σ ∪{ ε } onde ε ̸∈ Σ e representa uma transição que pode ocorrer sem a leitura de um símbolo. Setas que tem somente ϵ como rótulo são...",
+          "score_hibrido": 0.773384
+        },
+        {
+          "chunk_id": "afnd_chunk_0011",
+          "fonte": "afnd",
+          "score": 0.67487,
+          "metodo": "hibrido+rerank",
+          "trecho": "Seja q um estado de um AFND ( Q, Σ , δ, q 0 , F ) Definimos Ou seja, E ( q ) corresponde aos estados que podem ser atingidos a partir de q (inclusive) viajando-se ao longo de zero ou mais transições vazias.",
+          "score_hibrido": 0.777421
+        },
+        {
+          "chunk_id": "afnd_chunk_0010",
+          "fonte": "afnd",
+          "score": 0.546242,
+          "metodo": "hibrido+rerank",
+          "trecho": "## Equivalência entre AFD e AFND Mostrar a equivalência entre AFD e AFND corresponde a mostrar que tudo o que pode ser computado por um AFD também pode ser computado por um AFND e vice-versa. Para mostrar essa equivalência vamos construir, a partir de um AFD M , um AFND que reconhece L ( M ) e depois vamos construir...",
+          "score_hibrido": 0.812217
+        }
+      ]
+    },
+    {
+      "id": "Q05",
+      "pergunta": "O que são gramáticas lineares?",
+      "k_efetivo": 3,
+      "documentos_recuperados": [
+        {
+          "chunk_id": "GramaticasLineares_chunk_0000",
+          "fonte": "GramaticasLineares",
+          "score": 0.988079,
+          "metodo": "hibrido+rerank",
+          "trecho": "## Gramáticas e gramáticas Lineares ## Gramáticas Uma gramática é uma quádrupla ordenada G = ( V, Σ , P , S ), onde V é um conjunto finito cujos elementos são chamados variáveis ; Σ é um conjunto finito disjunto de V chamado alfabeto cujos elementos são ditos símbolos terminais ; P é um conjunto de pares α → β com α...",
+          "score_hibrido": 0.864604
+        },
+        {
+          "chunk_id": "GramaticasLineares_chunk_0006",
+          "fonte": "GramaticasLineares",
+          "score": 0.657315,
+          "metodo": "hibrido+rerank",
+          "trecho": "Duas gramáticas G 1 e G 2 são ditas equivalentes se L ( G 1 ) = L ( G 2 ). ## Gramáticas Lineares Seja G = ( V, Σ , P , S ) uma gramática. Na definições que se seguem A, B representam variáveis em V e w representa uma cadeia em Σ ∗ . Dizemos que G é uma Gramática Linear à Direita - GLD se todas as regras de produção...",
+          "score_hibrido": 0.78199
+        },
+        {
+          "chunk_id": "LF-41-79_chunk_0107",
+          "fonte": "LF-41-79",
+          "score": 0.27169,
+          "metodo": "hibrido+rerank",
+          "trecho": "Como já ocorria com as gramáticas lineares à direita, estaremos gerando palavras a partir de uma gramática livre de contexto pelo encadeamento de várias derivações de um passo. Assim, dizer que w ′ pode ser derivada a partir de w em G em n passos significa que existem palavras w 1 , . . . , w n -1 ∈ ( T ∪ V ) ∗ tais...",
+          "score_hibrido": 0.764052
+        }
+      ]
+    },
+    {
+      "id": "Q06",
+      "pergunta": "O que é uma gramática livre de contexto?",
+      "k_efetivo": 3,
+      "documentos_recuperados": [
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0000",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 0.999968,
+          "metodo": "hibrido+rerank",
+          "trecho": "## Gramáticas e linguagens livre de contexto ## Gramáticas livres de contexto Uma gramática livre de contexto é uma gramática G = ( V, Σ , P , S ) onde cada regra de produção α → β em P é tal que α ∈ V e β ∈ ( V ∪ Σ) ∗ , ou seja, o que caracteriza o fato de uma linguagem ser livre de contexto é que do lado esquerdo ...",
+          "score_hibrido": 0.956912
+        },
+        {
+          "chunk_id": "LF-41-79_chunk_0122",
+          "fonte": "LF-41-79",
+          "score": 0.995918,
+          "metodo": "hibrido+rerank",
+          "trecho": "## 2. Linguagens sensíveis ao contexto É hora de voltar à questão de como seria uma gramática que não é livre de contexto. Lembre-se que o que caracteriza as gramáticas livres de contexto é o fato de que todas as suas regras têm apenas uma variável (e nenhum terminal) do lado esquerdo da seta. Na prática isto signif...",
+          "score_hibrido": 0.914502
+        },
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0001",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 0.957029,
+          "metodo": "hibrido+rerank",
+          "trecho": "Umalinguagem A é dita livre de contexto - LLC ou do tipo 2 se existe uma gramática livre de contexto G tal que L ( G ) = A . Por exemplo, a linguagem A = { a n b n : n ≥ 0 } é livre de contexto pois",
+          "score_hibrido": 0.88048
+        }
+      ]
+    },
+    {
+      "id": "Q07",
+      "pergunta": "Qual é a ideia da Forma Normal de Chomsky?",
+      "k_efetivo": 3,
+      "documentos_recuperados": [
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0042",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 0.998578,
+          "metodo": "hibrido+rerank",
+          "trecho": "## Forma Normal de Chomsky ̸ Uma GLC G = ( V, Σ , P , S ) está na Forma Normal de Chomsky (FNC) se e somente se todas as produções de G são da forma A → BC ou A → a , onde A, B, C ∈ V e a ∈ Σ e A = S . Adicionalmente, permitimos a regra S → ϵ .",
+          "score_hibrido": 1.0
+        },
+        {
+          "chunk_id": "GramaticasLivresDeContexto_chunk_0041",
+          "fonte": "GramaticasLivresDeContexto",
+          "score": 0.519889,
+          "metodo": "hibrido+rerank",
+          "trecho": "## Formas Normais Em muitas aplicações é comum assumirmos que as produções de uma GLC's estão restritas a uma dada forma especial. Duas dessas formas úteis são a Forma Normal de Chomsky (FNC) e a Forma Normal de Greibach (FNG).",
+          "score_hibrido": 0.814236
+        },
+        {
+          "chunk_id": "LF-109-143_chunk_0151",
+          "fonte": "LF-109-143",
+          "score": 0.002783,
+          "metodo": "hibrido+rerank",
+          "trecho": "≠ onde estamos supondo que σ ∈ Σ ∪{ ε } e que γ ∈ Γ ∪{ ε } . É claro que N é cordato; falta apenas mostrar que L ( N ) = L ( M ) . Observe que o comportamento de N pode ser descrito suncintamente dizendo que, depois de marcar o fundo da pilha com β , o autômato simula o comportamento de M . De fato, na primeira tran...",
+          "score_hibrido": 0.480716
+        }
+      ]
+    },
+    {
+      "id": "Q08",
+      "pergunta": "Como expressões regulares se relacionam com linguagens regulares?",
+      "k_efetivo": 3,
+      "documentos_recuperados": [
+        {
+          "chunk_id": "LF-7-25_chunk_0059",
+          "fonte": "LF-7-25",
+          "score": 0.986233,
+          "metodo": "hibrido+rerank",
+          "trecho": "A razão para introduzir expressões regulares como palavras em um alfabeto, em vez de pensá-las simplesmente como a descrição de uma linguagem, é que expressões regulares distintas podem denotar o mesmo conjunto. Este é o caso, por exemplo, das expressões (0 ∪ 1) ∗ e ((0 ∗ · 1) ∗ · 0 ∗ ) , como vimos ao final da seçã...",
+          "score_hibrido": 0.966544
+        },
+        {
+          "chunk_id": "LF-7-25_chunk_0071",
+          "fonte": "LF-7-25",
+          "score": 0.850595,
+          "metodo": "hibrido+rerank",
+          "trecho": "Abordaremos este problema detalhadamente a partir do próximo capítulo. Entretanto, já estamos em condições de obter expressões regulares para as linguagens que descrevem inteiros e variáveis de um programa, como veremos a seguir.",
+          "score_hibrido": 0.742103
+        },
+        {
+          "chunk_id": "LF-7-25_chunk_0056",
+          "fonte": "LF-7-25",
+          "score": 0.822111,
+          "metodo": "hibrido+rerank",
+          "trecho": "Uma expressão regular é uma palavra no alfabeto ˜ Σ , construída recursivamente pela aplicação sucessiva das seguintes regras: - (1) se σ ∈ Σ então σ é uma expressão regular; - (2) ∅ e ε são expressões regulares; - (3) se r 1 e r 2 são expressões regulares, então ( r 1 ∪ r 2 ) e ( r 1 · r 2 ) também são; - (4) se r ...",
+          "score_hibrido": 0.832048
+        }
+      ]
+    },
+    {
+      "id": "Q09",
+      "pergunta": "O que a propriedade do bombeamento permite provar sobre linguagens regulares?",
+      "k_efetivo": 3,
+      "documentos_recuperados": [
+        {
+          "chunk_id": "LF-81-108_chunk_0091",
+          "fonte": "LF-81-108",
+          "score": 0.999441,
+          "metodo": "hibrido+rerank",
+          "trecho": "Para que esta propriedade do bombeamento possa ser usada para provar que uma linguagem não é livre de contexto precisamos formulála de maneira mais precisa. Além disso, como no caso do lema correspondente para linguagens regulares, incluiremos algumas condições técnicas extras que reduzem o número de possíveis decom...",
+          "score_hibrido": 0.930454
+        },
+        {
+          "chunk_id": "LF-81-108_chunk_0082",
+          "fonte": "LF-81-108",
+          "score": 0.998319,
+          "metodo": "hibrido+rerank",
+          "trecho": "Mas como será possível provar que não existe nenhuma gramática livre de contexto que gere uma dada linguagem? A estratégia é a mesma adotada para o caso de linguagens regulares. Isto é, provaremos que toda linguagem livre de contexto satisfaz uma propriedade de bombeamento. Portanto, uma linguagem que não satisfizer...",
+          "score_hibrido": 0.961974
+        },
+        {
+          "chunk_id": "LF-27-39_chunk_0000",
+          "fonte": "LF-27-39",
+          "score": 0.996804,
+          "metodo": "hibrido+rerank",
+          "trecho": "/ / / / ## CAPíTULO 4 ## Linguagens que não são regulares O objetivo deste capítulo é desenvolver um método que nos permita mostrar que uma dada linguagem não é regular. Nossa estratégia será a seguinte. Emprimeiro lugar, mostraremos que toda linguagem regular satisfaz certa propriedade, conhecida como propriedade d...",
+          "score_hibrido": 0.965006
+        }
+      ]
+    },
+    {
+      "id": "Q10",
+      "pergunta": "Como construir um AFND a partir de uma gramática linear à direita?",
+      "k_efetivo": 3,
+      "documentos_recuperados": [
+        {
+          "chunk_id": "LF-81-108_chunk_0073",
+          "fonte": "LF-81-108",
+          "score": 0.818315,
+          "metodo": "hibrido+rerank",
+          "trecho": "a gramática linear à direita construída a partir de um autômato finito determinístico pelo algoritmo do capítulo 8 não é ambígüa. Para entender porque isto é verdade, suponha que M seja um autômato finito determinístico e G seja a gramática construída a partir de M pelo algoritmo do capítulo ??. Vimos que as derivaç...",
+          "score_hibrido": 0.891444
+        },
+        {
+          "chunk_id": "LF-81-108_chunk_0074",
+          "fonte": "LF-81-108",
+          "score": 0.808434,
+          "metodo": "hibrido+rerank",
+          "trecho": "Diante deste resultado, é claro que, ao receber uma gramática linear à direita G como entrada, o algoritmo procede da seguinte maneira: - Etapa 1: determina um autômato finito não determinístico M tal que L ( M ) = L ( G ) ; - Etapa 2: determina um autômato finito determinístico M ′ tal que L ( M ) = L ( M ′ ) ; - E...",
+          "score_hibrido": 0.840836
+        },
+        {
+          "chunk_id": "LF-109-143_chunk_0103",
+          "fonte": "LF-109-143",
+          "score": 0.804995,
+          "metodo": "hibrido+rerank",
+          "trecho": "Já temos alguma experiência com este tipo de questão. De fato, provamos que uma linguagem gerada por uma gramática linear à direita é regular construindo um autômato finito cujas computações simulam derivações na gramática dada. No caso de linguagens livres de contexto a correspondência será entre computações no aut...",
+          "score_hibrido": 0.923362
+        }
+      ]
+    }
+  ]
+}

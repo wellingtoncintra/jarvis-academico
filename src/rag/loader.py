@@ -13,6 +13,8 @@ from pathlib import Path
 from loguru import logger
 from docling.document_converter import DocumentConverter
 
+from .cleaner import normalizar_markdown
+
 
 # Instancia o conversor uma única vez (é pesado para inicializar)
 _converter = None
@@ -54,6 +56,7 @@ def pdf_para_markdown(caminho_pdf: str | Path) -> str:
     converter = _get_converter()
     resultado = converter.convert(str(caminho))
     markdown = resultado.document.export_to_markdown()
+    markdown = normalizar_markdown(markdown)
 
     logger.info(f"Conversão concluída: {len(markdown):,} caracteres")
     return markdown

@@ -12,20 +12,20 @@ Uso (com venv ativado, na raiz do projeto):
 """
 
 import argparse
+import sys
 from pathlib import Path
 from loguru import logger
 
-try:
-    from .loader import carregar_todos_pdfs, pdf_para_markdown, salvar_markdown
-    from .chunker import chunkar_documento, estatisticas
-    from .embedder import construir_indices, salvar_indices, adicionar_chunks
-except ImportError:
-    from src.rag.loader import carregar_todos_pdfs, pdf_para_markdown, salvar_markdown
-    from src.rag.chunker import chunkar_documento, estatisticas
-    from src.rag.embedder import construir_indices, salvar_indices, adicionar_chunks
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
+from src.rag.loader import carregar_todos_pdfs, pdf_para_markdown, salvar_markdown
+from src.rag.chunker import chunkar_documento, estatisticas
+from src.rag.embedder import construir_indices, salvar_indices, adicionar_chunks
 
 
-def indexar_pasta(pasta: str = "data/raw") -> None:
+def indexar_pasta(pasta: str = "data/raw") -> int:
     """
     Processa todos os PDFs de uma pasta e (re)constrói os índices do zero.
     Use este modo quando quiser reindexar tudo.
@@ -37,7 +37,7 @@ def indexar_pasta(pasta: str = "data/raw") -> None:
 
     if not documentos:
         logger.error("Nenhum documento carregado. Abortando.")
-        return
+        return 0
 
     # Salva os Markdowns gerados para inspeção
     for doc in documentos:
@@ -51,7 +51,7 @@ def indexar_pasta(pasta: str = "data/raw") -> None:
 
     if not todos_chunks:
         logger.error("Nenhum chunk gerado. Verifique os PDFs.")
-        return
+        return 0
 
     stats = estatisticas(todos_chunks)
     logger.info(
@@ -72,9 +72,10 @@ def indexar_pasta(pasta: str = "data/raw") -> None:
     logger.info("=== Indexação concluída com sucesso! ===")
     logger.info(f"Total de chunks indexados: {len(todos_chunks)}")
     logger.info("Agora você pode fazer perguntas ao JARVIS sobre esses documentos.")
+    return len(todos_chunks)
 
 
-def indexar_pdf(caminho_pdf: str) -> None:
+def indexar_pdf(caminho_pdf: str) -> int:
     """
     Processa um único PDF e adiciona aos índices existentes.
     Use este modo quando quiser adicionar um documento sem reindexar tudo.
@@ -84,7 +85,7 @@ def indexar_pdf(caminho_pdf: str) -> None:
     pdf = Path(caminho_pdf)
     if not pdf.exists():
         logger.error(f"Arquivo não encontrado: {caminho_pdf}")
-        return
+        return 0
 
     # Converte e salva Markdown
     markdown = pdf_para_markdown(pdf)
@@ -102,6 +103,7 @@ def indexar_pdf(caminho_pdf: str) -> None:
     adicionar_chunks(chunks)
 
     logger.info(f"=== PDF adicionado: {len(chunks)} novos chunks indexados ===")
+    return len(chunks)
 
 
 if __name__ == "__main__":
@@ -123,6 +125,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.pdf:
-        indexar_pdf(args.pdf)
+        total = indexar_pdf(args.pdf)
     else:
-        indexar_pasta(args.pasta)
+        total = indexar_pasta(args.pasta)
+
+    if total == 0:
+        raise SystemExit(1)

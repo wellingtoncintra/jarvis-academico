@@ -1,349 +1,263 @@
-## Gram´ aticas e linguagens livre de contexto
+## Gramáticas e linguagens livre de contexto
 
-## Gram´ aticas livres de contexto
+## Gramáticas livres de contexto
 
-Uma gram´ atica livre de contexto ´ e uma gram´ atica G = ( V, Σ , P , S ) onde cada regra de produ¸ c˜ ao α → β em P ´ e tal que α ∈ V e β ∈ ( V ∪ Σ) ∗ , ou seja, o que caracteriza o fato de uma linguagem ser livre de contexto ´ e que do lado esquerdo de cada regra de produ¸ c˜ ao h´ a exatamente uma vari´ avel.
+Uma gramática livre de contexto é uma gramática G = ( V, Σ , P , S ) onde cada regra de produção α → β em P é tal que α ∈ V e β ∈ ( V ∪ Σ) ∗ , ou seja, o que caracteriza o fato de uma linguagem ser livre de contexto é que do lado esquerdo de cada regra de produção há exatamente uma variável.
 
-Umalinguagem A ´ e dita livre de contexto - LLC ou do tipo 2 se existe uma gram´ atica livre de contexto G tal que L ( G ) = A . Por exemplo, a linguagem A = { a n b n : n ≥ 0 } ´ e livre de contexto pois
+Umalinguagem A é dita livre de contexto - LLC ou do tipo 2 se existe uma gramática livre de contexto G tal que L ( G ) = A . Por exemplo, a linguagem A = { a n b n : n ≥ 0 } é livre de contexto pois
 
-<!-- formula-not-decoded -->
+gera a linguagem A e é LLC.
 
-gera a linguagem A e ´ e LLC.
+## Exercícios
 
-## Exerc´ ıcios
-
-Mostre que as seguintes linguagens s˜ ao LLC.
+Mostre que as seguintes linguagens são LLC.
 
 - 1. { a n b n : n ≥ 0 } ;
 - 2. { a n b m c n : n, m ≥ 0 } ;
 - 3. { a n b m : n ≤ m ≤ 2 n } ;
 
-<!-- formula-not-decoded -->
-
 Argumente do porque vale o seguinte resultado.
 
-Lema 1. Toda linguagem regular ´ e LLC.
+Lema 1. Toda linguagem regular é LLC.
 
-## Deriva¸ c˜ oes mais a esquerda e mais a direita
+## Derivações mais a esquerda e mais a direita
 
-H´ a algumas vantagens pr´ aticas e te´ oricas em substituirmos a vari´ avel mais ` a esquerda em cada deriva¸ c˜ ao ou, analogamente, a vari´ avel mais ` a direita. Tais deriva¸ c˜ oes s˜ ao denominadas deriva¸ c˜ oes mais ` a esquerda e deriva¸ c˜ oes mais ` a direita , respectivamente, e s˜ ao formalmente definidas como segue:
+Há algumas vantagens práticas e teóricas em substituirmos a variável mais à esquerda em cada derivação ou, analogamente, a variável mais à direita. Tais derivações são denominadas derivações mais à esquerda e derivações mais à direita , respectivamente, e são formalmente definidas como segue:
 
-Sejam ( V, Σ , P , S ) uma GLC, e α, β ∈ ( V ∪ Σ) ∗ . Ent˜ ao, n´ os dizemos que α ⇒ β ´ e um passo de uma deriva¸ c˜ ao mais ` a esquerda se existirem x ∈ Σ ∗ , ρ ∈ ( V ∪ Σ) ∗ e uma produ¸ c˜ ao ( A → γ ) ∈ P tais que
+Sejam ( V, Σ , P , S ) uma GLC, e α, β ∈ ( V ∪ Σ) ∗ . Então, nós dizemos que α ⇒ β é um passo de uma derivação mais à esquerda se existirem x ∈ Σ ∗ , ρ ∈ ( V ∪ Σ) ∗ e uma produção ( A → γ ) ∈ P tais que
 
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-´ e uma deriva¸ c˜ ao mais a esquerda em n passos de γ 0 em γ n se cada γ i -1 ⇒ γ i ´ e um passo de uma deriva¸ c˜ ao mais a esquerda para cada i = 1 , . . . , n . Similarmente definimos um passo de uma deriva¸ c˜ ao mais a direita e deriva¸ c˜ ao mais a direita em n passos .
+é uma derivação mais a esquerda em n passos de γ 0 em γ n se cada γ i -1 ⇒ γ i é um passo de uma derivação mais a esquerda para cada i = 1 , . . . , n . Similarmente definimos um passo de uma derivação mais a direita e derivação mais a direita em n passos .
 
 ## Exemplo 1. Considere a GLC
 
-<!-- formula-not-decoded -->
-
-Ent˜ ao, a cadeia a + a × a possui as deriva¸ c˜ oes mais ` a esquerda e mais ` a direita em G mostradas a seguir respectivamente (usamos negrito para identificar a vari´ avel substitu´ ıda):
-
-<!-- formula-not-decoded -->
+Então, a cadeia a + a × a possui as derivações mais à esquerda e mais à direita em G mostradas a seguir respectivamente (usamos negrito para identificar a variável substituída):
 
 e
 
-Uma deriva¸ c˜ ao
+Uma derivação
 
-<!-- formula-not-decoded -->
+- O lema a seguir tem implicações práticas importantes para a complexidade dos algoritmos de análise sintática em Compiladores.
 
-- O lema a seguir tem implica¸ c˜ oes pr´ aticas importantes para a complexidade dos algoritmos de an´ alise sint´ atica em Compiladores.
+Fato 1. Sejam G = ( V, Σ , P , S ) uma GLC, w ∈ Σ ∗ e α ∈ ( V ∪ Σ) ∗ . Se α n ⇒ w para n ∈ N , então há uma derivação mais à esquerda (direita) de α para w em n passos.
 
-Fato 1. Sejam G = ( V, Σ , P , S ) uma GLC, w ∈ Σ ∗ e α ∈ ( V ∪ Σ) ∗ . Se α n ⇒ w para n ∈ N , ent˜ ao h´ a uma deriva¸ c˜ ao mais ` a esquerda (direita) de α para w em n passos.
-
-Prova . Indu¸ c˜ ao em n provamos que h´ a uma deriva¸ c˜ ao ` a esquerda. Uma prova da mesma afirma¸ c˜ ao para deriva¸ c˜ oes mais ` a direita ´ e an´ aloga.
+Prova . Indução em n provamos que há uma derivação à esquerda. Uma prova da mesma afirmação para derivações mais à direita é análoga.
 
 Vale por vacuidade para n = 0.
 
-Suponha ent˜ ao que n &gt; 0. Ent˜ ao, a deriva¸ c˜ ao α n ⇒ w ´ e da forma
+Suponha então que n &gt; 0. Então, a derivação α n ⇒ w é da forma
 
-<!-- formula-not-decoded -->
+Há dois casos a considerar:
 
-H´ a dois casos a considerar:
+- 1) Suponha que α ⇒ β é o passo de uma derivação mais à esquerda. Pela hipótese de indução, há uma derivação mais à esquerda em n -1 passos de β a w o que implica por definição que existe uma derivação mais a esquerda de α a w em n passos.
+- 2) Suponha agora que o passo de derivação α ⇒ β não é uma derivação mais à esquerda. Então n &gt; 1 e existem x ∈ Σ ∗ , µ, ρ ∈ ( V ∪ Σ) ∗ , variáveis A e B e uma produção B → δ tais que
 
-- 1) Suponha que α ⇒ β ´ e o passo de uma deriva¸ c˜ ao mais ` a esquerda. Pela hip´ otese de indu¸ c˜ ao, h´ a uma deriva¸ c˜ ao mais ` a esquerda em n -1 passos de β a w o que implica por defini¸ c˜ ao que existe uma deriva¸ c˜ ao mais a esquerda de α a w em n passos.
-- 2) Suponha agora que o passo de deriva¸ c˜ ao α ⇒ β n˜ ao ´ e uma deriva¸ c˜ ao mais ` a esquerda. Ent˜ ao n &gt; 1 e existem x ∈ Σ ∗ , µ, ρ ∈ ( V ∪ Σ) ∗ , vari´ aveis A e B e uma produ¸ c˜ ao B → δ tais que
+Como β n -1 ⇒ w , pela hipótese de indução, deve existir uma derivação mais à esquerda de β a w . Como β = xAµδρ e A é a variável mais à esquerda em β , o primeiro passo de uma derivação mais à esquerda de β a w é da forma xAµδρ ⇒ xγµδρ, para alguma produção A → γ . Logo,
 
-<!-- formula-not-decoded -->
+Nós podemos trocar a ordem dos dois primeiros passos envolvendo as regras B → δ e A → γ , e obtemos a derivação
 
-Como β n -1 ⇒ w , pela hip´ otese de indu¸ c˜ ao, deve existir uma deriva¸ c˜ ao mais ` a esquerda de β a w . Como β = xAµδρ e A ´ e a vari´ avel mais ` a esquerda em β , o primeiro passo de uma deriva¸ c˜ ao mais ` a esquerda de β a w ´ e da forma xAµδρ ⇒ xγµδρ, para alguma produ¸ c˜ ao A → γ . Logo,
+A derivação acima pode ser feita em n passo e o primeiro passo é uma derivação mais à esquerda. Isto implica que estamos de volta ao caso 1. Logo, existe uma derivação mais à esquerda de α a w em n passos.
 
-<!-- formula-not-decoded -->
+Como consequência do fato acima temos:
 
-N´ os podemos trocar a ordem dos dois primeiros passos envolvendo as regras B → δ e A → γ , e obtemos a deriva¸ c˜ ao
+Lema 2. Seja G = ( V, Σ , P , S ) uma GLC. Então, para toda cadeia w ∈ Σ ∗ tal que w ∈ L ( G ) , há uma derivação mais à esquerda e uma derivação mais à direita em G que geram w .
 
-<!-- formula-not-decoded -->
+## Exercícios
 
-A deriva¸ c˜ ao acima pode ser feita em n passo e o primeiro passo ´ e uma deriva¸ c˜ ao mais ` a esquerda. Isto implica que estamos de volta ao caso 1. Logo, existe uma deriva¸ c˜ ao mais ` a esquerda de α a w em n passos.
-
-Como consequˆ encia do fato acima temos:
-
-Lema 2. Seja G = ( V, Σ , P , S ) uma GLC. Ent˜ ao, para toda cadeia w ∈ Σ ∗ tal que w ∈ L ( G ) , h´ a uma deriva¸ c˜ ao mais ` a esquerda e uma deriva¸ c˜ ao mais ` a direita em G que geram w .
-
-## Exerc´ ıcios
-
-- 1. Considere a gram´ atica
+- 1. Considere a gramática
 
 tal que
 
-<!-- formula-not-decoded -->
+Então,
 
-Ent˜ ao,
+- (a) Quais cadeias de L ( G ) podem ser produzidas por derivações de, no máximo, quatro passos?
+- (b) Forneça pelo menos quatro derivações diferentes para a cadeia babbab ?
+- (c) Para quaisquer inteiros positivos, m , n , e p , descreva uma derivação em G da cadeia b m ab n ab p .
 
-- (a) Quais cadeias de L ( G ) podem ser produzidas por deriva¸ c˜ oes de, no m´ aximo, quatro passos?
-- (b) Forne¸ ca pelo menos quatro deriva¸ c˜ oes diferentes para a cadeia babbab ?
-- (c) Para quaisquer inteiros positivos, m , n , e p , descreva uma deriva¸ c˜ ao em G da cadeia b m ab n ab p .
+## Árvores de análise sintática
 
-## ´ Arvores de an´ alise sint´ atica
+Uma árvore sintática é uma estrutura que representa uma coleção de derivações que gera uma cadeia em (Σ ∪ V ) ∗ a partir de uma variável inicial em GLC. Formalmente, uma árvore sintática para uma GLC G = ( V, Σ , P , S ) é uma árvore enraizada e ordenada que satisfaz as seguintes condições:
 
-Uma ´ arvore sint´ atica ´ e uma estrutura que representa uma cole¸ c˜ ao de deriva¸ c˜ oes que gera uma cadeia em (Σ ∪ V ) ∗ a partir de uma vari´ avel inicial em GLC. Formalmente, uma ´ arvore sint´ atica para uma GLC G = ( V, Σ , P , S ) ´ e uma ´ arvore enraizada e ordenada que satisfaz as seguintes condi¸ c˜ oes:
+- 1. Cada nó interior é rotulado por uma variável em V .
 
-- 1. Cada n´ o interior ´ e rotulado por uma vari´ avel em V .
+- 2. Cada folha é rotulada por uma variável, um símbolo do alfabeto ou ϵ . No entanto, se a folha for rotulada por ϵ , ela deve ser o único filho de seu pai.
+- 3. Se um nó interior é rotulado A e seus filhos são rotulados α 1 , α 2 , . . . , α , respectivamente, da esquerda para a direita e com cada α i ∈ ( V ∪ Σ) ∗ , então A → α 1 α 2 · · · α n é uma produção em P .
 
-<!-- formula-not-decoded -->
+A Figura 1 mostra uma árvore sintática que gera a cadeia ()( S ) pela derivação S ⇒ SS ⇒ ( S ) S ⇒ ( S )( S ) ⇒ ()( S ) através da gramática
 
-- 2. Cada folha ´ e rotulada por uma vari´ avel, um s´ ımbolo do alfabeto ou ϵ . No entanto, se a folha for rotulada por ϵ , ela deve ser o ´ unico filho de seu pai.
-- 3. Se um n´ o interior ´ e rotulado A e seus filhos s˜ ao rotulados α 1 , α 2 , . . . , α , respectivamente, da esquerda para a direita e com cada α i ∈ ( V ∪ Σ) ∗ , ent˜ ao A → α 1 α 2 · · · α n ´ e uma produ¸ c˜ ao em P .
+que gera a linguagem PARBAL = { x ∈ { ( , ) } ∗ | x é balanceada } . A raiz é identificada com a produção S → SS , pois os dois filhos da raiz possuem rótulo S e S , respectivamente, da esquerda para a direita. Os filhos mais à esquerda e mais à direita da raiz são ambos associados com a produção S → ( S ), pois os três filhos do filho mais à esquerda (resp. mais à direita) da raiz são rotulados com (, S e ), respectivamente, da esquerda para a direita.
 
-A Figura 1 mostra uma ´ arvore sint´ atica que gera a cadeia ()( S ) pela deriva¸ c˜ ao S ⇒ SS ⇒ ( S ) S ⇒ ( S )( S ) ⇒ ()( S ) atrav´ es da gram´ atica
-
-<!-- formula-not-decoded -->
-
-que gera a linguagem PARBAL = { x ∈ { ( , ) } ∗ | x ´ e balanceada } . A raiz ´ e identificada com a produ¸ c˜ ao S → SS , pois os dois filhos da raiz possuem r´ otulo S e S , respectivamente, da esquerda para a direita. Os filhos mais ` a esquerda e mais ` a direita da raiz s˜ ao ambos associados com a produ¸ c˜ ao S → ( S ), pois os trˆ es filhos do filho mais ` a esquerda (resp. mais ` a direita) da raiz s˜ ao rotulados com (, S e ), respectivamente, da esquerda para a direita.
-
-Figura 1: Uma ´ arvore sint´ atica para a gram´ atica que gera a linguagem PARBAL.
+Figura 1: Uma árvore sintática para a gramática que gera a linguagem PARBAL.
 
 <!-- image -->
 
-Se examinarmos as folhas de uma ´ arvore sint´ atica e as concatenarmos a partir da esquerda, obteremos uma cadeia em (Σ ∪ V ) ∗ chamada resultado da ´ arvore , que ´ e sempre uma cadeia derivada da vari´ avel raiz. S˜ ao importantes as ´ arvores sint´ aticas cujas ra´ ızes s˜ ao rotuladas com o s´ ımbolo inicial da gram´ atica e seus resultados s˜ ao cadeias em Σ ∗ .
+Se examinarmos as folhas de uma árvore sintática e as concatenarmos a partir da esquerda, obteremos uma cadeia em (Σ ∪ V ) ∗ chamada resultado da árvore , que é sempre uma cadeia derivada da variável raiz. São importantes as árvores sintáticas cujas raízes são rotuladas com o símbolo inicial da gramática e seus resultados são cadeias em Σ ∗ .
 
-## Exerc´ ıcios
+## Exercícios
 
-- 1. Considere a gram´ atica
-
-<!-- formula-not-decoded -->
+- 1. Considere a gramática
 
 Mostre para a cadeia aab ∈ L ( G ) uma
 
-- (a) ´ Arvores sint´ aticas.
-- (b) Deriva¸ c˜ oes mais ` a esquerda.
-- (c) Deriva¸ c˜ oes mais ` a direita.
-- 2. Suponha que G seja uma GLC sem quaisquer produ¸ c˜ oes que tenha ϵ como lado direito. Se w est´ a em L ( G ), o comprimento de w ´ e n , e w pode ser derivada em G com m passos de deriva¸ c˜ ao a partir do s´ ımbolo inicial de G , mostre que w possui uma ´ arvore sint´ atica com n + m n´ os.
+- (a) Árvores sintáticas.
+- (b) Derivações mais à esquerda.
+- (c) Derivações mais à direita.
+- 2. Suponha que G seja uma GLC sem quaisquer produções que tenha ϵ como lado direito. Se w está em L ( G ), o comprimento de w é n , e w pode ser derivada em G com m passos de derivação a partir do símbolo inicial de G , mostre que w possui uma árvore sintática com n + m nós.
 
-## Simplifica¸ c˜ ao de Gram´ aticas Livres de Contexto
+## Simplificação de Gramáticas Livres de Contexto
 
-A defini¸ c˜ ao de uma LLC n˜ ao imp˜ oe nenhuma restri¸ c˜ ao no 'lado direito' de uma produ¸ c˜ ao. Entretanto, em algumas ocasi˜ oes, impor restri¸ c˜ oes na gram´ atica pode facilitar uma demonstra¸ c˜ ao ou reduzir a complexidade de um algoritmo. Nesta se¸ c˜ ao, estudamos v´ arias transforma¸ c˜ oes e substitui¸ c˜ oes que podem ser utilizadas para transformar uma GLC em outra GLC equivalente e cujas produ¸ c˜ oes obedecem a certas restri¸ c˜ oes.
+A definição de uma LLC não impõe nenhuma restrição no 'lado direito' de uma produção. Entretanto, em algumas ocasiões, impor restrições na gramática pode facilitar uma demonstração ou reduzir a complexidade de um algoritmo. Nesta seção, estudamos várias transformações e substituições que podem ser utilizadas para transformar uma GLC em outra GLC equivalente e cujas produções obedecem a certas restrições.
 
-## Uma regra ´ util de substitui¸ c˜ ao
+## Uma regra útil de substituição
 
-Teorema 1. Sejam G = ( V, Σ , P , S ) uma GLC e A → α 1 Bα 2 ∈ P com α 1 , α 2 ∈ (Σ ∪ V ) ∗ e A, B ∈ V . Suponha que B → β 1 | β 2 | · · · | β m seja o conjunto de todas as produ¸ c˜ oes em P que possuem B do 'lado esquerdo' e β i ∈ (Σ ∪ V ) ∗ , para todo i .
+Teorema 1. Sejam G = ( V, Σ , P , S ) uma GLC e A → α 1 Bα 2 ∈ P com α 1 , α 2 ∈ (Σ ∪ V ) ∗ e A, B ∈ V . Suponha que B → β 1 | β 2 | · · · | β m seja o conjunto de todas as produções em P que possuem B do 'lado esquerdo' e β i ∈ (Σ ∪ V ) ∗ , para todo i .
 
-Considere a GLC G ′ = ( V, Σ , P ′ , S ) onde P ′ ´ e obtido pela remo¸ c˜ ao de A → α 1 Bα 2 e a inclus˜ ao de A → α 1 β 1 α 2 | α 1 β 2 α 2 | · · · | α 1 β m α 2 em P .
+Considere a GLC G ′ = ( V, Σ , P ′ , S ) onde P ′ é obtido pela remoção de A → α 1 Bα 2 e a inclusão de A → α 1 β 1 α 2 | α 1 β 2 α 2 | · · · | α 1 β m α 2 em P .
 
-Ent˜ ao, temos que L ( G ) = L ( G ′ ) .
+Então, temos que L ( G ) = L ( G ′ ) .
 
 ## Exemplo 2. Considere
 
 tal que L ( G ′ ) = L ( G ) .
 
-## Elimina¸ c˜ ao de produ¸ c˜ oes in´ uteis
+## Eliminação de produções inúteis
 
-Seja G = ( V, Σ , P , S ) uma GLC. Uma vari´ avel A ∈ V ´ e dita ´ util se existe pelo menos uma cadeia w ∈ L ( G ) tal que S ∗ ⇒ αAβ ∗ ⇒ w , com α, β ∈ ( V ∪ Σ) ∗ . Em outras palavras, uma vari´ avel ´ e ´ util se ela ´ e usada em pelo menos uma deriva¸ c˜ ao de alguma cadeia. Uma vari´ avel que n˜ ao ´ e ´ util ´ e dita in´ util . Uma produ¸ c˜ ao ´ e in´ util se ela cont´ em pelo menos uma vari´ avel in´ util.
+Seja G = ( V, Σ , P , S ) uma GLC. Uma variável A ∈ V é dita útil se existe pelo menos uma cadeia w ∈ L ( G ) tal que S ∗ ⇒ αAβ ∗ ⇒ w , com α, β ∈ ( V ∪ Σ) ∗ . Em outras palavras, uma variável é útil se ela é usada em pelo menos uma derivação de alguma cadeia. Uma variável que não é útil é dita inútil . Uma produção é inútil se ela contém pelo menos uma variável inútil.
 
-Queremos eliminar produ¸ c˜ oes in´ uteis pois elas n˜ ao servem para gerar cadeias da gram´ atica que ela gera. Por exemplo, seja
-
-<!-- formula-not-decoded -->
+Queremos eliminar produções inúteis pois elas não servem para gerar cadeias da gramática que ela gera. Por exemplo, seja
 
 uma GLC.
 
-Primeiramente computamos o conjunto Φ de s´ ımbolos geradores de G .
+Primeiramente computamos o conjunto Φ de símbolos geradores de G .
 
 algoritmo computa Φ( G ) :=
 
 - 1. Φ := ∅ ;
-- 2. enquanto existir ( A → α ) ∈ P tal que α ∈ (Σ ∪ Φ) ∗ fa¸ ca
+- 2. enquanto existir ( A → α ) ∈ P tal que α ∈ (Σ ∪ Φ) ∗ faça
 - 3. Φ ← Φ ∪ { A }
 - 4. devolva Φ.
 
-<!-- formula-not-decoded -->
+Usando o Teorema 1, podemos obter uma nova GLC G ′ removendo a produção A → abBc e acrescentando as regras A → ababbAc | abbc . Assim,
 
-Usando o Teorema 1, podemos obter uma nova GLC G ′ removendo a produ¸ c˜ ao A → abBc e acrescentando as regras A → ababbAc | abbc . Assim,
+O tempo gasto pelo algoritmo é O ( |P| · | V | ) se o número de símbolos em cada produção é constante. Em cada iteração, examinamos cada produção e o número total de iterações é | V | .
 
-<!-- formula-not-decoded -->
+Se executarmos o algoritmo acima com a GLC do nosso exemplo, obteremos Φ = { S, A, B } e a gramática que é induzida por essas variáveis é
 
-O tempo gasto pelo algoritmo ´ e O ( |P| · | V | ) se o n´ umero de s´ ımbolos em cada produ¸ c˜ ao ´ e constante. Em cada itera¸ c˜ ao, examinamos cada produ¸ c˜ ao e o n´ umero total de itera¸ c˜ oes ´ e | V | .
+Depois de encontrar Φ, computamos o conjunto Ψ de variáveis atingíveis de G ′ a partir de S . Mais precisamente consideramos o digrafo D = (Φ , A ) onde
 
-Se executarmos o algoritmo acima com a GLC do nosso exemplo, obteremos Φ = { S, A, B } e a gram´ atica que ´ e induzida por essas vari´ aveis ´ e
-
-<!-- formula-not-decoded -->
-
-Depois de encontrar Φ, computamos o conjunto Ψ de vari´ aveis ating´ ıveis de G ′ a partir de S . Mais precisamente consideramos o digrafo D = (Φ , A ) onde
-
-<!-- formula-not-decoded -->
-
-e determinamos Ψ := { A ∈ Φ : existe um caminho de S a A em D } . Note que se S ̸∈ Φ, ent˜ ao Ψ = ∅ .
+e determinamos Ψ := { A ∈ Φ : existe um caminho de S a A em D } . Note que se S ̸∈ Φ, então Ψ = ∅ .
 
 <!-- image -->
 
-Figura 2: Executando o segundo passo para o grafo G ′ , obtemos Ψ := { S, A } . Geramos uma GLC, G ′′ , que cont´ em todas as produ¸ c˜ oes de G em que todos as vari´ aveis pertencem a Ψ: G ′′ := S → aS | A, A → a .
+Figura 2: Executando o segundo passo para o grafo G ′ , obtemos Ψ := { S, A } . Geramos uma GLC, G ′′ , que contém todas as produções de G em que todos as variáveis pertencem a Ψ: G ′′ := S → aS | A, A → a .
 
-Oalgoritmo acima gasta tempo O |P| para construir o digrafo D quando o n´ umero de s´ ımbolos em cada produ¸ c˜ ao ´ e constante e O ( |P| + | V | ) para encontrar as vari´ aveis alcan¸ c´ aveis por S usando nesse ´ ultimo caso algum algoritmo de busca tais como busca em profundidade e busca e largura. A constru¸ c˜ ao acima nos permite concluir o seguinte resultado.
+Oalgoritmo acima gasta tempo O |P| para construir o digrafo D quando o número de símbolos em cada produção é constante e O ( |P| + | V | ) para encontrar as variáveis alcançáveis por S usando nesse último caso algum algoritmo de busca tais como busca em profundidade e busca e largura. A construção acima nos permite concluir o seguinte resultado.
 
-Teorema 2. Seja G uma GLC qualquer. Ent˜ ao, existe uma GLC equivalente a G que n˜ ao possui nenhuma vari´ avel in´ util.
+Teorema 2. Seja G uma GLC qualquer. Então, existe uma GLC equivalente a G que não possui nenhuma variável inútil.
 
 Prova . Prova construtiva mas sendo os detalhes omitidos.
 
-As produ¸ c˜ oes ´ uteis s˜ ao aquelas que n˜ ao cont´ em vari´ aveis in´ uteis.
+As produções úteis são aquelas que não contém variáveis inúteis.
 
-## Elimina¸ c˜ ao de produ¸ c˜ oes nulas
+## Eliminação de produções nulas
 
-Em uma GLC, qualquer produ¸ c˜ ao da forma
+Em uma GLC, qualquer produção da forma
 
-<!-- formula-not-decoded -->
+é chamada de produção nula .
 
-´ e chamada de produ¸ c˜ ao nula .
-
-Lema 3. Seja G uma GLC e S sua vari´ avel inicial. Existe uma GLC G ′ sem produ¸ c˜ oes nulas, exceto eventualmente a produ¸ c˜ ao S → ϵ , tal que L ( G ′ ) = L ( G ) .
+Lema 3. Seja G uma GLC e S sua variável inicial. Existe uma GLC G ′ sem produções nulas, exceto eventualmente a produção S → ϵ , tal que L ( G ′ ) = L ( G ) .
 
 ̸
 
-<!-- formula-not-decoded -->
+Aplicando a regra da prova do Lema 3 (são vários passos, verifique - primeiro eliminamos B → ϵ , depois C → ϵ e finalmente A → ϵ ), obtemos
 
-Aplicando a regra da prova do Lema 3 (s˜ ao v´ arios passos, verifique - primeiro eliminamos B → ϵ , depois C → ϵ e finalmente A → ϵ ), obtemos
+Prova . ( Esboço ) A obtenção de G ′ é construtiva e é algorítmica. Primeiro, enquanto houver uma produção A → ϵ com A = S , para cada produção B → αAβ com α, β ∈ (Σ ∪ V ) ∗ , acrescente a produção B → αβ . Se α = β = ϵ , acrescente a regra B → ϵ a menos que esta regra tenha sido previamente removida. Repetimos esses passos até que eliminemos todas as produções nulas que não envolvam a variável inicial e obtemos a gramática G ′ . Note que L ( G ) = L ( G ′ ). □
 
-<!-- formula-not-decoded -->
-
-Prova . ( Esbo¸ co ) A obten¸ c˜ ao de G ′ ´ e construtiva e ´ e algor´ ıtmica. Primeiro, enquanto houver uma produ¸ c˜ ao A → ϵ com A = S , para cada produ¸ c˜ ao B → αAβ com α, β ∈ (Σ ∪ V ) ∗ , acrescente a produ¸ c˜ ao B → αβ . Se α = β = ϵ , acrescente a regra B → ϵ a menos que esta regra tenha sido previamente removida. Repetimos esses passos at´ e que eliminemos todas as produ¸ c˜ oes nulas que n˜ ao envolvam a vari´ avel inicial e obtemos a gram´ atica G ′ . Note que L ( G ) = L ( G ′ ). □
-
-## Exemplo 3. Seja a gram´ atica
+## Exemplo 3. Seja a gramática
 
 □
 
-## Elimina¸ c˜ ao de produ¸ c˜ oes unit´ arias
+## Eliminação de produções unitárias
 
-Em uma GLC G = ( V, Σ , P , S ), qualquer produ¸ c˜ ao da forma
+Em uma GLC G = ( V, Σ , P , S ), qualquer produção da forma
 
-<!-- formula-not-decoded -->
+onde A, B ∈ V , é chamada de produção unitária .
 
-onde A, B ∈ V , ´ e chamada de produ¸ c˜ ao unit´ aria .
+Lema 4. Seja G uma GLC. Existe GLC G ′ sem produções unitárias tal que L ( G ′ ) = L ( G ) .
 
-Lema 4. Seja G uma GLC. Existe GLC G ′ sem produ¸ c˜ oes unit´ arias tal que L ( G ′ ) = L ( G ) .
+Prova . ( Esboço ) Semelhante à prova do Lema 3, construa uma gramática G ′ a partir de G acrescentando produções A → γ sempre que tivermos A → B e B → γ . Se γ é uma variável, acrescente a regra A → γ a menos que esta regra tenha sido removida anteriormente. Repita esse processo até que não existam mais produções unitárias. Note que L ( G ) = L ( G ′ ). □
 
-Prova . ( Esbo¸ co ) Semelhante ` a prova do Lema 3, construa uma gram´ atica G ′ a partir de G acrescentando produ¸ c˜ oes A → γ sempre que tivermos A → B e B → γ . Se γ ´ e uma vari´ avel, acrescente a regra A → γ a menos que esta regra tenha sido removida anteriormente. Repita esse processo at´ e que n˜ ao existam mais produ¸ c˜ oes unit´ arias. Note que L ( G ) = L ( G ′ ). □
-
-## Exemplo 4. Seja a gram´ atica
-
-<!-- formula-not-decoded -->
+## Exemplo 4. Seja a gramática
 
 Usando a regra da prova do Lema 4 (elimine nessa ordem as regras S → B , S → A , B → A e a → B ) obtemos
 
-<!-- formula-not-decoded -->
+removendo as produções unitárias.
 
-removendo as produ¸ c˜ oes unit´ arias.
+## Exercícios
 
-## Exerc´ ıcios
-
-- 1. Mostre que as gram´ aticas
-
-<!-- formula-not-decoded -->
+- 1. Mostre que as gramáticas
 
 e
 
-s˜ ao equivalentes.
+são equivalentes.
 
-- 2. Elimine todas as produ¸ c˜ oes in´ uteis da gram´ atica
+- 2. Elimine todas as produções inúteis da gramática
 
-<!-- formula-not-decoded -->
+Qual é a linguagem gerada pela gramática?
 
-Qual ´ e a linguagem gerada pela gram´ atica?
+- 3. Elimine todas as produções nulas da gramática
 
-- 3. Elimine todas as produ¸ c˜ oes nulas da gram´ atica
+- 4. Elimine todas as produções nulas, unitárias e inúteis da gramática
 
-<!-- formula-not-decoded -->
+Qual é a linguagem gerada pela gramática?
 
-- 4. Elimine todas as produ¸ c˜ oes nulas, unit´ arias e in´ uteis da gram´ atica
+- 5. Dê um exemplo de uma situação em que a eliminação de produções nulas introduz produções unitárias que não existiam antes. Em seguida, argumente sobre a ordem em que os procedimentos de eliminação de produções nulas e de produções unitárias devem ser aplicados se queremos uma gramática sem produções nulas e sem produções unitárias.
+- 6. Prove que se uma gramática não possui nenhuma produção nula e nenhuma produção unitária, então a eliminação de produções inúteis, pela construção dada neste capítulo, não introduz nenhuma produção nula nem unitária. Em seguida, argumente sobre a ordem em que os procedimentos de eliminação de produções nulas, unitárias e inúteis devem ser aplicados se não queremos esses tipos de produção em nossa gramática.
 
-<!-- formula-not-decoded -->
+- 7. Suponha que uma GLC G tenha uma produção da forma
 
-Qual ´ e a linguagem gerada pela gram´ atica?
+Prove que se esta regra for substituída por
 
-- 5. Dˆ e um exemplo de uma situa¸ c˜ ao em que a elimina¸ c˜ ao de produ¸ c˜ oes nulas introduz produ¸ c˜ oes unit´ arias que n˜ ao existiam antes. Em seguida, argumente sobre a ordem em que os procedimentos de elimina¸ c˜ ao de produ¸ c˜ oes nulas e de produ¸ c˜ oes unit´ arias devem ser aplicados se queremos uma gram´ atica sem produ¸ c˜ oes nulas e sem produ¸ c˜ oes unit´ arias.
-- 6. Prove que se uma gram´ atica n˜ ao possui nenhuma produ¸ c˜ ao nula e nenhuma produ¸ c˜ ao unit´ aria, ent˜ ao a elimina¸ c˜ ao de produ¸ c˜ oes in´ uteis, pela constru¸ c˜ ao dada neste cap´ ıtulo, n˜ ao introduz nenhuma produ¸ c˜ ao nula nem unit´ aria. Em seguida, argumente sobre a ordem em que os procedimentos de elimina¸ c˜ ao de produ¸ c˜ oes nulas, unit´ arias e in´ uteis devem ser aplicados se n˜ ao queremos esses tipos de produ¸ c˜ ao em nossa gram´ atica.
+onde B é uma nova variável introduzida em G , então a gramática resultante será equivalente à original.
 
-<!-- formula-not-decoded -->
-
-- 7. Suponha que uma GLC G tenha uma produ¸ c˜ ao da forma
-
-<!-- formula-not-decoded -->
-
-Prove que se esta regra for substitu´ ıda por
-
-<!-- formula-not-decoded -->
-
-onde B ´ e uma nova vari´ avel introduzida em G , ent˜ ao a gram´ atica resultante ser´ a equivalente ` a original.
-
-- 8. Considere o procedimento de dois passos, dado neste cap´ ıtulo, para eliminar produ¸ c˜ oes in´ uteis. Inverta a ordem dos dois passos. Isto ´ e, primeiro calcule o conjunto Ψ dos s´ ımbolos ating´ ıveis e, em seguida, calcule o conjunto Φ dos s´ ımbolos geradores. Vocˆ e acha que esta invers˜ ao de passos produz um procedimento correto para gerar uma gram´ atica equivalente ` a original, mas sem produ¸ c˜ oes in´ uteis? Se sim, prove que vocˆ e est´ a correto. Caso contr´ ario, forne¸ ca um contraexemplo.
+- 8. Considere o procedimento de dois passos, dado neste capítulo, para eliminar produções inúteis. Inverta a ordem dos dois passos. Isto é, primeiro calcule o conjunto Ψ dos símbolos atingíveis e, em seguida, calcule o conjunto Φ dos símbolos geradores. Você acha que esta inversão de passos produz um procedimento correto para gerar uma gramática equivalente à original, mas sem produções inúteis? Se sim, prove que você está correto. Caso contrário, forneça um contraexemplo.
 
 ## Formas Normais
 
-Em muitas aplica¸ c˜ oes ´ e comum assumirmos que as produ¸ c˜ oes de uma GLC's est˜ ao restritas a uma dada forma especial. Duas dessas formas ´ uteis s˜ ao a Forma Normal de Chomsky (FNC) e a Forma Normal de Greibach (FNG).
+Em muitas aplicações é comum assumirmos que as produções de uma GLC's estão restritas a uma dada forma especial. Duas dessas formas úteis são a Forma Normal de Chomsky (FNC) e a Forma Normal de Greibach (FNG).
 
 ## Forma Normal de Chomsky
 
 ̸
 
-Uma GLC G = ( V, Σ , P , S ) est´ a na Forma Normal de Chomsky (FNC) se e somente se todas as produ¸ c˜ oes de G s˜ ao da forma A → BC ou A → a , onde A, B, C ∈ V e a ∈ Σ e A = S . Adicionalmente, permitimos a regra S → ϵ .
+Uma GLC G = ( V, Σ , P , S ) está na Forma Normal de Chomsky (FNC) se e somente se todas as produções de G são da forma A → BC ou A → a , onde A, B, C ∈ V e a ∈ Σ e A = S . Adicionalmente, permitimos a regra S → ϵ .
 
-Exemplo 5. A gram´ atica
+Exemplo 5. A gramática
 
-<!-- formula-not-decoded -->
+está na FNC. Note que a linguagem L ( G ) gerada por G é exatamente
 
-est´ a na FNC. Note que a linguagem L ( G ) gerada por G ´ e exatamente
+Teorema 3. Dada uma GLC G = ( V, Σ , P , S ) , há uma GLC G ′ na FNC com L ( G ′ ) = L ( G ) .
 
-<!-- formula-not-decoded -->
+Prova . (esboço) A prova é construtiva. A gramática será modificada sem mudar a linguagem por ela gerada. Vamos acompanhar um exemplo para acompanhar essa transformação. Considere inicialmente a gramática
 
-Teorema 3. Dada uma GLC G = ( V, Σ , P , S ) , h´ a uma GLC G ′ na FNC com L ( G ′ ) = L ( G ) .
+Passo 1. Crie uma variável inicial S ′ e a regra S ′ → S para garantir que a variável inicial não apareça do lado direito de alguma regra. Ficamos assim
 
-Prova . (esbo¸ co) A prova ´ e construtiva. A gram´ atica ser´ a modificada sem mudar a linguagem por ela gerada. Vamos acompanhar um exemplo para acompanhar essa transforma¸ c˜ ao. Considere inicialmente a gram´ atica
+com a gramática de nosso exemplo.
 
-<!-- formula-not-decoded -->
+Passo 2. Elimine as transições nulas usando o Lema 3 e obtenha a gramática
 
-Passo 1. Crie uma vari´ avel inicial S ′ e a regra S ′ → S para garantir que a vari´ avel inicial n˜ ao apare¸ ca do lado direito de alguma regra. Ficamos assim
+que é equivalente à gramática de nosso exemplo.
 
-<!-- formula-not-decoded -->
+Passo 3. Elimine as transições unitárias usando o Lema 4 e obtenha a gramática
 
-com a gram´ atica de nosso exemplo.
+Passo 4. As regras remanescentes indesejáveis da forma
 
-Passo 2. Elimine as transi¸ c˜ oes nulas usando o Lema 3 e obtenha a gram´ atica
+onde k ≥ 3 e cada u i ∈ (Σ ∪ V ) são substituídas por k -1 novas regras
 
-<!-- formula-not-decoded -->
+onde cada A i é uma nova variável. A gramática de nosso exemplo fica assim.
 
-que ´ e equivalente ` a gram´ atica de nosso exemplo.
+Passo 5. Para cada regra X → uv onde u ∈ Σ ou v ∈ Σ, substitua o elemento em Σ por uma variável e acrescente mais uma regra convertendo essa variável no símbolo em Σ. Assim, em nosso exemplo
 
-Passo 3. Elimine as transi¸ c˜ oes unit´ arias usando o Lema 4 e obtenha a gram´ atica
-
-<!-- formula-not-decoded -->
-
-Passo 4. As regras remanescentes indesej´ aveis da forma
-
-<!-- formula-not-decoded -->
-
-onde k ≥ 3 e cada u i ∈ (Σ ∪ V ) s˜ ao substitu´ ıdas por k -1 novas regras
-
-<!-- formula-not-decoded -->
-
-onde cada A i ´ e uma nova vari´ avel. A gram´ atica de nosso exemplo fica assim.
-
-<!-- formula-not-decoded -->
-
-Passo 5. Para cada regra X → uv onde u ∈ Σ ou v ∈ Σ, substitua o elemento em Σ por uma vari´ avel e acrescente mais uma regra convertendo essa vari´ avel no s´ ımbolo em Σ. Assim, em nosso exemplo
-
-<!-- formula-not-decoded -->
-
-que est´ a na FNC e L ( G ′ ) = L ( G ).
+que está na FNC e L ( G ′ ) = L ( G ).
 
 □
 
@@ -359,25 +273,9 @@ Passo 4
 
 Passo 5
 
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-Exemplo 7. Seja G := S → ( S ) | SS | ϵ uma GLC. Note que L ( G ) ´ e PARBAL definida em (1).
+Exemplo 7. Seja G := S → ( S ) | SS | ϵ uma GLC. Note que L ( G ) é PARBAL definida em (1).
 
 Passo 1
-
-<!-- formula-not-decoded -->
 
 Passo 2
 
@@ -389,25 +287,11 @@ Passo 5
 
 Exemplo 8. Seja a GLC
 
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
 ## Passo 1
 
 ## Passo 2
 
 ## Passo 3
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
 
 ```
 S ′ → CBh | be | SABC | ABC | ϵ S → CBh | be | SABC | ABC A → aaD B → Sf | ggg | f C → cA | d D → be | SABC | ABC E → be.
@@ -421,7 +305,7 @@ S ′ → CX 1 | be | SX 2 | AX 3 | ϵ S → CX 1 | be | SX 2 | AX 3 A → aX 4 
 
 ## Passo 5
 
-## Exerc´ ıcios
+## Exercícios
 
 1. Seja
 
@@ -431,117 +315,77 @@ S ′ → CX 1 | U 1 U 2 | SX 2 | AX 3 | ϵ S → CX 1 | U 1 U 2 | SX 2 | AX 3 A
 
 U 8 → h
 
-<!-- formula-not-decoded -->
+uma GLC. Forneça uma GLC G ′ na FNC tal que L ( G ′ ) = L ( G ).
 
-uma GLC. Forne¸ ca uma GLC G ′ na FNC tal que L ( G ′ ) = L ( G ).
+- 2. Seja G uma gramática livre de contexto na FNC. Então, mostre que qualquer
 
-- 2. Seja G uma gram´ atica livre de contexto na FNC. Ent˜ ao, mostre que qualquer
-
-cadeia w ∈ L ( G ) ´ e derivada a partir do s´ ımbolo inicial de G com exatamente 2 · | w | -1 passos de deriva¸ c˜ ao.
+cadeia w ∈ L ( G ) é derivada a partir do símbolo inicial de G com exatamente 2 · | w | -1 passos de derivação.
 
 ## Forma Normal de Greibach
 
-Vide [Enc14]. Uma GLC G = ( V, Σ , P , S ) est´ a na Forma Normal de Greibach (FNG) se a vari´ avel inicial nunca aparece do lado direito de uma regra e todas as produ¸ c˜ oes de G s˜ ao da forma S → ϵ ou
+Vide [Enc14]. Uma GLC G = ( V, Σ , P , S ) está na Forma Normal de Greibach (FNG) se a variável inicial nunca aparece do lado direito de uma regra e todas as produções de G são da forma S → ϵ ou
 
-<!-- formula-not-decoded -->
+para algum k ∈ N , A, B 1 , . . . , B k ∈ V e a ∈ Σ. Note que k = 0 é permitido, o que implica que podemos ter produções da forma A → a .
 
-para algum k ∈ N , A, B 1 , . . . , B k ∈ V e a ∈ Σ. Note que k = 0 ´ e permitido, o que implica que podemos ter produ¸ c˜ oes da forma A → a .
+Exemplo 9. A gramática
 
-Exemplo 9. A gram´ atica
+está na Forma Normal de Greibach. Note que a linguagem deste exemplo é PARBAL (1).
 
-<!-- formula-not-decoded -->
+Nessa seção mostramos como transformar uma GLC qualquer em uma GLC na FNG. Para isso usamos o resultado obtido no próximo lema. Nessa seção nos referimos a uma produção com a variável A do lado esquerdo como produção -A .
 
-est´ a na Forma Normal de Greibach. Note que a linguagem deste exemplo ´ e PARBAL (1).
+e A → β 1 | β 2 | · · · | β s as demais produçõesA em uma GLC G . Considere G ′ uma gramática obtida a partir de G pela substituição de cada A → Aα ∈ A pelas produções
 
-Nessa se¸ c˜ ao mostramos como transformar uma GLC qualquer em uma GLC na FNG. Para isso usamos o resultado obtido no pr´ oximo lema. Nessa se¸ c˜ ao nos referimos a uma produ¸ c˜ ao com a vari´ avel A do lado esquerdo como produ¸ c˜ ao -A .
+onde B é uma nova variável. Então, L ( G ′ ) = L ( G ) .
 
-<!-- formula-not-decoded -->
+Prova . (esboço) Mostrar que L ( G ) ⊆ L ( G ′ ) e que L ( G ′ ) ⊆ L ( G ). Seja B o conjunto de todas as regras adicionadas após a remoção dos elementos em A para a obtenção de G ′ .
 
-<!-- formula-not-decoded -->
+Seja G ′′ uma GLC que possui conjunto de produções de G e de G ′ . Temos então que os conjuntos de produções de G , G ′ e G ′′ são respectivamente P , ( P -A ) ∪B e P ∪ B . Logo,
 
-<!-- formula-not-decoded -->
+Seja w uma cadeia arbitrária em L ( G ′′ ).
 
-e A → β 1 | β 2 | · · · | β s as demais produ¸ c˜ oesA em uma GLC G . Considere G ′ uma gram´ atica obtida a partir de G pela substitui¸ c˜ ao de cada A → Aα ∈ A pelas produ¸ c˜ oes
+Queremos mostrar primeiramente que existe uma derivação de w em G ′′ que não usa regras em A . Então, suponha por contradição que toda derivação de w usa pelo menos uma regra em A . O Lema 2 garante existir uma derivação mais a esquerda de w . Considere a seguir aquela que usa a menor quantidade de vezes uma regra em A onde destacamos a última vez que uma dessas regras é utilizada:
 
-<!-- formula-not-decoded -->
+Note que a sequência de derivações em destaque pode ser substituída por
 
-onde B ´ e uma nova vari´ avel. Ent˜ ao, L ( G ′ ) = L ( G ) .
-
-Prova . (esbo¸ co) Mostrar que L ( G ) ⊆ L ( G ′ ) e que L ( G ′ ) ⊆ L ( G ). Seja B o conjunto de todas as regras adicionadas ap´ os a remo¸ c˜ ao dos elementos em A para a obten¸ c˜ ao de G ′ .
-
-Seja G ′′ uma GLC que possui conjunto de produ¸ c˜ oes de G e de G ′ . Temos ent˜ ao que os conjuntos de produ¸ c˜ oes de G , G ′ e G ′′ s˜ ao respectivamente P , ( P -A ) ∪B e P ∪ B . Logo,
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-Seja w uma cadeia arbitr´ aria em L ( G ′′ ).
-
-Queremos mostrar primeiramente que existe uma deriva¸ c˜ ao de w em G ′′ que n˜ ao usa regras em A . Ent˜ ao, suponha por contradi¸ c˜ ao que toda deriva¸ c˜ ao de w usa pelo menos uma regra em A . O Lema 2 garante existir uma deriva¸ c˜ ao mais a esquerda de w . Considere a seguir aquela que usa a menor quantidade de vezes uma regra em A onde destacamos a ´ ultima vez que uma dessas regras ´ e utilizada:
-
-<!-- formula-not-decoded -->
-
-Note que a sequˆ encia de deriva¸ c˜ oes em destaque pode ser substitu´ ıda por
-
-<!-- formula-not-decoded -->
-
-que ´ e uma deriva¸ c˜ ao de w que usa menos vezes uma regra em A o que ´ e uma contradi¸ c˜ ao. Logo, existe uma deriva¸ c˜ ao de w em G ′′ que n˜ ao usa regras em A . Isto implica que L ( G ′′ ) ⊆ L ( G ′ ). Segue de (2) que L ( G ) ⊆ L ( G ′′ ) ⊆ L ( G ′ ) o que implica que L ( G ) ⊆ L ( G ′ ).
+que é uma derivação de w que usa menos vezes uma regra em A o que é uma contradição. Logo, existe uma derivação de w em G ′′ que não usa regras em A . Isto implica que L ( G ′′ ) ⊆ L ( G ′ ). Segue de (2) que L ( G ) ⊆ L ( G ′′ ) ⊆ L ( G ′ ) o que implica que L ( G ) ⊆ L ( G ′ ).
 
 ′′
 
-Vamos mostrar agora que existe uma deriva¸ c˜ ao de w em G que n˜ ao usa regras em B . Suponha por contradi¸ c˜ ao que toda deriva¸ c˜ ao de w usa pelo menos uma regra em B . O Lema 2 garante existir uma deriva¸ c˜ ao mais a direita de w . Considere uma delas em n passos que usa a menor quantidade de vezes uma regra em B pode ser esbo¸ cada abaixo:
+Vamos mostrar agora que existe uma derivação de w em G que não usa regras em B . Suponha por contradição que toda derivação de w usa pelo menos uma regra em B . O Lema 2 garante existir uma derivação mais a direita de w . Considere uma delas em n passos que usa a menor quantidade de vezes uma regra em B pode ser esboçada abaixo:
 
-<!-- formula-not-decoded -->
-
-onde v ∈ Σ ∗ . Note que a sequˆ encia de deriva¸ c˜ oes em (4) pode ser substitu´ ıda por
+onde v ∈ Σ ∗ . Note que a sequência de derivações em (4) pode ser substituída por
 
 uAv ⇒ uβAα k +1 v ⇒ uAα k α k +1 v ⇒ . . . ⇒ uAα 1 . . . α k α k +1 v ⇒ uβα 1 . . . α k α k +1 v
 
-que ´ e uma deriva¸ c˜ ao a direita em n passos de w que usa menos vezes uma regra em B o que ´ e uma contradi¸ c˜ ao. Logo, existe uma deriva¸ c˜ ao de w em G ′′ que n˜ ao usa regras em B . Isto implica que L ( G ′′ ) ⊆ L ( G ). Segue de (2) que L ( G ′ ) ⊆ L ( G ′′ ) ⊆ L ( G ) o que implica que L ( G ) ⊆ L ( G ′ ). □
+que é uma derivação a direita em n passos de w que usa menos vezes uma regra em B o que é uma contradição. Logo, existe uma derivação de w em G ′′ que não usa regras em B . Isto implica que L ( G ′′ ) ⊆ L ( G ). Segue de (2) que L ( G ′ ) ⊆ L ( G ′′ ) ⊆ L ( G ) o que implica que L ( G ) ⊆ L ( G ′ ). □
 
-Voltamos agora ` a nossa transforma¸ c˜ ao de uma GLC qualquer em uma FNG na FNG.
+Voltamos agora à nossa transformação de uma GLC qualquer em uma FNG na FNG.
 
-Teorema 4. Dada qualquer GLC G , h´ a uma GLC G ′ na FNG tal que L ( G ′ ) = L ( G ) .
+Teorema 4. Dada qualquer GLC G , há uma GLC G ′ na FNG tal que L ( G ′ ) = L ( G ) .
 
-Prova . (esbo¸ co) Como sempre, n˜ ao faremos uma prova formal do resultado. Mostramos simplesmente uma constru¸ c˜ ao que transforma uma GLC qualquer em uma na FNG. Explicamos cada passo no caso geral e no caso particular de um exemplo utilizado para exemplificar a constru¸ c˜ ao. A justificativa dos passos fica por conta dos resultados estudados anteriormente e da intui¸ c˜ ao.
+Prova . (esboço) Como sempre, não faremos uma prova formal do resultado. Mostramos simplesmente uma construção que transforma uma GLC qualquer em uma na FNG. Explicamos cada passo no caso geral e no caso particular de um exemplo utilizado para exemplificar a construção. A justificativa dos passos fica por conta dos resultados estudados anteriormente e da intuição.
 
-Passo 1. Dada uma GCL, obtenha a gram´ atica na FNC.
+Passo 1. Dada uma GCL, obtenha a gramática na FNC.
 
-Passo 2. Estabele¸ ca uma ordena¸ c˜ ao das vari´ aveis da GLC obtida no Passo 1.
+Passo 2. Estabeleça uma ordenação das variáveis da GLC obtida no Passo 1.
 
-Suponha ent˜ ao que a GLC obtida ap´ os o Passo 2 seja
+Suponha então que a GLC obtida após o Passo 2 seja
 
-<!-- formula-not-decoded -->
+Passo 3. Esse passo modifica as produções da GLC de modo que as produções resultantes sejam tais que se A i → A j α é uma produção, então j &gt; i . Começando com A 1 e procedendo até A m , usamos o seguinte procedimento indutivo explicado a seguir.
 
-Passo 3. Esse passo modifica as produ¸ c˜ oes da GLC de modo que as produ¸ c˜ oes resultantes sejam tais que se A i → A j α ´ e uma produ¸ c˜ ao, ent˜ ao j &gt; i . Come¸ cando com A 1 e procedendo at´ e A m , usamos o seguinte procedimento indutivo explicado a seguir.
+Assuma que as produções já tenham sido modificadas de tal modo que, para todo 1 ≤ i &lt; k , se A i → A j α é uma produção, então j &gt; i . Então, modificamos as produçõesA k .
 
-Assuma que as produ¸ c˜ oes j´ a tenham sido modificadas de tal modo que, para todo 1 ≤ i &lt; k , se A i → A j α ´ e uma produ¸ c˜ ao, ent˜ ao j &gt; i . Ent˜ ao, modificamos as produ¸ c˜ oesA k .
+Se A k → A j α é uma produção com j &lt; k , nós geramos um novo conjunto de produções que substitui o lado direito de A k → A j α pelo lado direito das produçõesA j usando o Lema 1. Repetindo este processo, no máximo, k -1 vezes, para cada produção A k → A j α , com j &lt; k , nós obtemos produções da forma A k → A l α , com l ≥ k .
 
-Se A k → A j α ´ e uma produ¸ c˜ ao com j &lt; k , n´ os geramos um novo conjunto de produ¸ c˜ oes que substitui o lado direito de A k → A j α pelo lado direito das produ¸ c˜ oesA j usando o Lema 1. Repetindo este processo, no m´ aximo, k -1 vezes, para cada produ¸ c˜ ao A k → A j α , com j &lt; k , n´ os obtemos produ¸ c˜ oes da forma A k → A l α , com l ≥ k .
-
-No nosso exemplo, modificar´ ıamos primeiro a produ¸ c˜ ao
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
+No nosso exemplo, modificaríamos primeiro a produção
 
 A → A A
 
-<!-- formula-not-decoded -->
+Em seguida, nós substituímos as produções com l = k através da introdução de um novo variável B k como explicado no enunciado do Lema 5.
 
-Em seguida, n´ os substitu´ ımos as produ¸ c˜ oes com l = k atrav´ es da introdu¸ c˜ ao de um novo vari´ avel B k como explicado no enunciado do Lema 5.
-
-O resultado do passo anterior ´ e um conjunto de produ¸ c˜ oes da forma
-
-<!-- formula-not-decoded -->
+O resultado do passo anterior é um conjunto de produções da forma
 
 Assim, no nosso exemplo a GLD ficaria assim.
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
 
 substituindo-a por
 
@@ -555,19 +399,17 @@ que podemos escrever
 A 0 → A 2 A 3 A 1 → A 2 A 3 A 2 → A 3 A 1 | b, A 3 → bA 3 A 2 | a | bA 3 A 2 B 3 | aB 3 B 3 → A 1 A 3 A 2 | A 1 A 3 A 2 B 3 .
 ```
 
-As observa¸ c˜ oes a seguir valem para o nosso mas, mais forte do que isto, como consequˆ encia do m´ etodo utilizado, vale para qualquer gram´ atica.
+As observações a seguir valem para o nosso mas, mais forte do que isto, como consequência do método utilizado, vale para qualquer gramática.
 
-Passo 3. Note que o s´ ımbolo mais ` a esquerda do lado direito de qualquer produ¸ c˜ aoA m deve ser um s´ ımbolo do alfabeto. O s´ ımbolo mais ` a esquerda do lado direito de qualquer produ¸ c˜ aoA m -1 deve ser A m ou um elemento de Σ. Quando ele for A m , n´ os podemos gerar novas produ¸ c˜ oesA m -1 substituindo A m pelo lado direito das produ¸ c˜ oesA m de acordo com o Lema 1. Cada uma destas novas produ¸ c˜ oes possui lado direito come¸ cando com um s´ ımbolo de Σ. Logo, podemos repetir o mesmo procedimento para A m -2 , . . . , A 2 , A 1 , nesta ordem, at´ e que o lado direito de cada produ¸ c˜ aoA i comece com um elemento em Σ. O resultado ´ e um conjunto de produ¸ c˜ oes da forma
+Passo 3. Note que o símbolo mais à esquerda do lado direito de qualquer produçãoA m deve ser um símbolo do alfabeto. O símbolo mais à esquerda do lado direito de qualquer produçãoA m -1 deve ser A m ou um elemento de Σ. Quando ele for A m , nós podemos gerar novas produçõesA m -1 substituindo A m pelo lado direito das produçõesA m de acordo com o Lema 1. Cada uma destas novas produções possui lado direito começando com um símbolo de Σ. Logo, podemos repetir o mesmo procedimento para A m -2 , . . . , A 2 , A 1 , nesta ordem, até que o lado direito de cada produçãoA i comece com um elemento em Σ. O resultado é um conjunto de produções da forma
 
-<!-- formula-not-decoded -->
-
-com a ∈ Σ e γ ∈ ( V ∪ Σ ∪ { B 1 , . . . , B i -1 } ) ∗ . Note que o lado direito de cada B i pode come¸ car com um vari´ avel do tipo A i . Assim, em nosso exemplo, obtemos a gram´ atica
+com a ∈ Σ e γ ∈ ( V ∪ Σ ∪ { B 1 , . . . , B i -1 } ) ∗ . Note que o lado direito de cada B i pode começar com um variável do tipo A i . Assim, em nosso exemplo, obtemos a gramática
 
 ```
 A 0 → bA 3 A 2 A 1 A 3 | bA 3 A 2 B 3 A 1 A 3 | aA 1 A 3 | aB 3 A 1 A 3 | bA 3 A 1 → bA 3 A 2 A 1 A 3 | bA 3 A 2 B 3 A 1 A 3 | aA 1 A 3 | aB 3 A 1 A 3 | bA 3 A 2 → bA 3 A 2 A 1 | bA 3 A 2 B 3 A 1 | aA 1 | aB 3 A 1 | b A 3 → bA 3 A 2 | bA 3 A 2 B 3 | a | aB 3 B 3 → A 1 A 3 A 2 | A 1 A 3 A 2 B 3 .
 ```
 
-Como todas as produ¸ c˜ oesB j possuem lados direitos que iniciam com um s´ ımbolo do alfabeto ou um vari´ avel A i . Logo, uma aplica¸ c˜ ao a mais do Lema 1 para cada produ¸ c˜ aoB j completa a constru¸ c˜ ao da gram´ atica G ′ na FNG. Assim, no nosso exemplo, temos
+Como todas as produçõesB j possuem lados direitos que iniciam com um símbolo do alfabeto ou um variável A i . Logo, uma aplicação a mais do Lema 1 para cada produçãoB j completa a construção da gramática G ′ na FNG. Assim, no nosso exemplo, temos
 
 ```
 A 0 → bA 3 A 2 A 1 A 3 | bA 3 A 2 B 3 A 1 A 3 | aA 1 A 3 | aB 3 A 1 A 3 | bA 3 A 1 → bA 3 A 2 A 1 A 3 | bA 3 A 2 B 3 A 1 A 3 | aA 1 A 3 | aB 3 A 1 A 3 | bA 3 A 2 → bA 3 A 2 A 1 | bA 3 A 2 B 3 A 1 | aA 1 | aB 3 A 1 | b A 3 → bA 3 A 2 | bA 3 A 2 B 3 | a | aB 3 B 3 → bA 3 A 2 A 1 A 3 A 3 A 2 | bA 3 A 2 B 3 A 1 A 3 A 3 A 2 | aA 1 A 3 A 3 A 2 | aB 3 A 1 A 3 A 3 A 2 | bA 3 A 3 A 2 | bA 3 A 2 A 1 A 3 A 3 A 2 B 3 | bA 3 A 2 B 3 A 1 A 3 A 3 A 2 B 3 | aA 1 A 3 A 3 A 2 B 3 | aB 3 A 1 A 3 A 3 A 2 B 3 | bA 3 A 3 A 2 B 3 .
@@ -575,58 +417,40 @@ A 0 → bA 3 A 2 A 1 A 3 | bA 3 A 2 B 3 A 1 A 3 | aA 1 A 3 | aB 3 A 1 A 3 | bA 3
 
 □
 
-## Exerc´ ıcios
+## Exercícios
 
 - 1. Seja
 - 4. Dada a GLD
 
-<!-- formula-not-decoded -->
+uma GLC. Forneça uma GLC G ′ na FNG tal que L ( G ′ ) = L ( G ).
 
-uma GLC. Forne¸ ca uma GLC G ′ na FNG tal que L ( G ′ ) = L ( G ).
-
-- 2. Seja G uma gram´ atica livre de contexto na FNG. Ent˜ ao, mostre que qualquer cadeia w ∈ L ( G ) ´ e derivada a partir do s´ ımbolo inicial de G com exatamente | w | -1 passos de deriva¸ c˜ ao.
-- 3. Construa uma gram´ atica livre de contexto que gere a linguagem
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
+- 2. Seja G uma gramática livre de contexto na FNG. Então, mostre que qualquer cadeia w ∈ L ( G ) é derivada a partir do símbolo inicial de G com exatamente | w | -1 passos de derivação.
+- 3. Construa uma gramática livre de contexto que gere a linguagem
 
 5.
 
-encontre uma GLC sem vari´ aveis e produ¸ c˜ oes in´ uteis.
+encontre uma GLC sem variáveis e produções inúteis.
 
-<!-- formula-not-decoded -->
-
-encontre uma GLC equivalente, onde o s´ ımbolo reservado S n˜ ao aparece do lado direito das produ¸ c˜ oes e S → ϵ ´ e a ´ unica produ¸ c˜ ao nula.
+encontre uma GLC equivalente, onde o símbolo reservado S não aparece do lado direito das produções e S → ϵ é a única produção nula.
 
 ## 6. Considere a GLC
 
-<!-- formula-not-decoded -->
+determine a linguagem gerada por essa gramática.
 
-determine a linguagem gerada por essa gram´ atica.
+- 7. Encontre uma GLC sem varíaveis nem produções inúteis equivalente a GLC
 
-- 7. Encontre uma GLC sem var´ ıaveis nem produ¸ c˜ oes in´ uteis equivalente a GLC
-
-<!-- formula-not-decoded -->
-
-<!-- formula-not-decoded -->
-
-Construa uma GLC equivalente sem vari´ aveis nem produ¸ c˜ oes in´ uteis.
+Construa uma GLC equivalente sem variáveis nem produções inúteis.
 
 - 8. Considere a GLC
 
 ## 9. Considere a GLC
 
-<!-- formula-not-decoded -->
-
-Descreva informalmente quem ´ e L ( G ) e encontre uma gram´ atica equivalente a G , na FNC.
+Descreva informalmente quem é L ( G ) e encontre uma gramática equivalente a G , na FNC.
 
 ## 10. Considere a GLC
 
-<!-- formula-not-decoded -->
+Descreva informalmente quem é L ( G ) e encontre uma gramática equivalente a G, escrita na FNG.
 
-Descreva informalmente quem ´ e L ( G ) e encontre uma gram´ atica equivalente a G, escrita na FNG.
-
-## Referˆ encias Bibliogr´ aficas
+## Referências Bibliográficas
 
 [Enc14] Wikipedia The Free Encyclopedia. Greibach normal form. http://en.wikipedia.org/wiki/Greibach normal form, March 2014.

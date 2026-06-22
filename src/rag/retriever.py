@@ -10,9 +10,10 @@ Responsável por:
 """
 
 import re
+import unicodedata
 import numpy as np
 from loguru import logger
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import CrossEncoder, SentenceTransformer
 
 from .embedder import carregar_indices, indices_existem, MODELO_EMBEDDING
 from src.llm.client import get_llm_client, get_model_name
@@ -25,6 +26,11 @@ _chunks         = None
 _indice_faiss   = None
 _indice_bm25    = None
 _matriz         = None
+_reranker: CrossEncoder | None = None
+
+MODELO_RERANKER = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
+CANDIDATOS_RERANK = 10
+K_COMPARATIVO = 6
 
 
 def _get_modelo() -> SentenceTransformer:
@@ -32,6 +38,15 @@ def _get_modelo() -> SentenceTransformer:
     if _modelo is None:
         _modelo = SentenceTransformer(MODELO_EMBEDDING)
     return _modelo
+
+
+def _get_reranker() -> CrossEncoder:
+    """Carrega o cross-encoder multilíngue somente quando solicitado."""
+    global _reranker
+    if _reranker is None:
+        logger.info(f"Carregando modelo de reranking: {MODELO_RERANKER}")
+        _reranker = CrossEncoder(MODELO_RERANKER)
+    return _reranker
 
 
 def _carregar_se_necessario() -> None:
@@ -58,6 +73,31 @@ def _normalizar(v: np.ndarray) -> np.ndarray:
     if delta < 1e-9:
         return np.zeros_like(v)
     return (v - v.min()) / delta
+
+
+def _sem_acentos(texto: str) -> str:
+    normalizado = unicodedata.normalize("NFD", texto.lower())
+    return "".join(c for c in normalizado if unicodedata.category(c) != "Mn")
+
+
+def pergunta_comparativa(pergunta: str) -> bool:
+    """Detecta perguntas que pedem contraste entre conceitos."""
+    texto = _sem_acentos(pergunta)
+    marcadores = (
+        "diferenc",
+        "compare",
+        "comparacao",
+        "comparar",
+        " versus ",
+        " vs ",
+        "distincao",
+    )
+    return any(marcador in f" {texto} " for marcador in marcadores)
+
+
+def ajustar_k(pergunta: str, k: int) -> int:
+    """Amplia o contexto de perguntas comparativas sem nova chamada à LLM."""
+    return max(k, K_COMPARATIVO) if pergunta_comparativa(pergunta) else k
 
 
 # ── Funções de busca ──────────────────────────────────────────────────────────
@@ -148,6 +188,55 @@ def buscar_hibrido(pergunta: str, k: int = 3, alpha: float = 0.6) -> list[dict]:
     ]
 
 
+def reranquear(pergunta: str, docs: list[dict], k: int) -> list[dict]:
+    """Reordena candidatos com um cross-encoder multilíngue."""
+    if not docs:
+        return []
+
+    modelo = _get_reranker()
+    pares = [(pergunta, doc["texto"]) for doc in docs]
+    scores_brutos = np.asarray(modelo.predict(pares), dtype="float32").reshape(-1)
+    scores = 1.0 / (1.0 + np.exp(-np.clip(scores_brutos, -30, 30)))
+    ordem = np.argsort(scores_brutos)[::-1][:k]
+
+    resultado = []
+    for idx in ordem:
+        doc = dict(docs[int(idx)])
+        doc["score_hibrido"] = doc["score"]
+        doc["score"] = float(scores[int(idx)])
+        doc["score_rerank_bruto"] = float(scores_brutos[int(idx)])
+        doc["metodo"] = "hibrido+rerank"
+        resultado.append(doc)
+    return resultado
+
+
+def recuperar_documentos(
+    pergunta: str,
+    metodo: str = "hibrido",
+    k: int = 3,
+    alpha: float = 0.6,
+    rerank: bool = False,
+) -> list[dict]:
+    """Executa a mesma política de recuperação usada pelo fluxo de produção."""
+    k_final = ajustar_k(pergunta, k)
+
+    if metodo == "bm25":
+        return buscar_bm25(pergunta, k=k_final)
+    if metodo == "semantico":
+        return buscar_semantico(pergunta, k=k_final)
+
+    if not rerank:
+        return buscar_hibrido(pergunta, k=k_final, alpha=alpha)
+
+    candidatos_k = max(CANDIDATOS_RERANK, k_final)
+    candidatos = buscar_hibrido(pergunta, k=candidatos_k, alpha=alpha)
+    try:
+        return reranquear(pergunta, candidatos, k=k_final)
+    except Exception as erro:
+        logger.warning(f"Reranking indisponível; usando ranking híbrido: {erro}")
+        return candidatos[:k_final]
+
+
 # ── Geração de resposta ───────────────────────────────────────────────────────
 
 def _construir_prompt(pergunta: str, docs: list[dict]) -> str:
@@ -165,6 +254,7 @@ def responder(
     metodo:   str   = "hibrido",
     k:        int   = 3,
     alpha:    float = 0.6,
+    rerank:   bool  = False,
 ) -> dict:
     """
     Função principal do RAG — usada pelo agente via tool calling.
@@ -184,15 +274,18 @@ def responder(
         resultado = responder("O que é regressão logística?")
         print(resultado["resposta"])
     """
-    logger.info(f"RAG query: '{pergunta}' | método={metodo} | k={k}")
+    logger.info(
+        f"RAG query: '{pergunta}' | método={metodo} | k={k} | rerank={rerank}"
+    )
 
     # ── Passo 1: Recuperação ──────────────────────────────────────────────────
-    if metodo == "bm25":
-        docs = buscar_bm25(pergunta, k=k)
-    elif metodo == "semantico":
-        docs = buscar_semantico(pergunta, k=k)
-    else:
-        docs = buscar_hibrido(pergunta, k=k, alpha=alpha)
+    docs = recuperar_documentos(
+        pergunta=pergunta,
+        metodo=metodo,
+        k=k,
+        alpha=alpha,
+        rerank=rerank,
+    )
 
     if not docs:
         return {
@@ -220,4 +313,5 @@ def responder(
         "resposta": resposta,
         "chunks":   docs,
         "metodo":   metodo,
+        "rerank":   rerank,
     }
