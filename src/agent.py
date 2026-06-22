@@ -28,7 +28,6 @@ Loop:
 """
 
 import json
-import re
 import os
 from loguru import logger
 from dotenv import load_dotenv
@@ -36,6 +35,7 @@ from dotenv import load_dotenv
 from src.llm.client import get_llm_client, get_model_name
 from src.tools import executar_tool, TOOLS_DEF
 from src.logging_config import registrar_tool_log
+from src.utils import extrair_json
 
 load_dotenv()
 
@@ -91,37 +91,19 @@ SYSTEM_PROMPT = _build_system_prompt(_construir_tools_prompt())
 
 # ── Detector de tool call na resposta ────────────────────────────────────────
 
-_TOOL_RE = re.compile(
-    r'\{\s*"tool"\s*:\s*"([^"]+)"\s*,\s*"args"\s*:\s*(\{.*?\})\s*\}',
-    re.DOTALL,
-)
-
-
 def _extrair_tool_call(texto: str) -> dict | None:
     """
     Extrai {"tool": str, "args": dict} do texto da LLM.
     Retorna None se o texto não for um tool call.
+
+    Usa o parser de JSON central (src.utils.extrair_json), que já tolera
+    JSON puro, cercas markdown (```json ... ```) e JSON embutido em texto.
+    Aqui acrescentamos apenas a validação específica de tool call: o objeto
+    precisa conter as chaves "tool" e "args".
     """
-    texto = texto.strip()
-
-    # Tentativa 1: texto inteiro é JSON puro
-    try:
-        parsed = json.loads(texto)
-        if isinstance(parsed, dict) and "tool" in parsed and "args" in parsed:
-            return parsed
-    except json.JSONDecodeError:
-        pass
-
-    # Tentativa 2: JSON embutido no texto
-    match = _TOOL_RE.search(texto)
-    if match:
-        try:
-            parsed = json.loads(match.group(0))
-            if "tool" in parsed and "args" in parsed:
-                return parsed
-        except json.JSONDecodeError:
-            pass
-
+    parsed = extrair_json(texto)
+    if isinstance(parsed, dict) and "tool" in parsed and "args" in parsed:
+        return parsed
     return None
 
 

@@ -10,35 +10,8 @@ nascem dos materiais que o aluno indexou, não do conhecimento geral da LLM.
 """
 
 import streamlit as st
-import json
-import re
 
-
-# ── Utilitário de parsing ─────────────────────────────────────────────────────
-
-def _extrair_json(texto: str) -> dict | None:
-    """
-    Extrai o primeiro objeto JSON de uma resposta da LLM.
-    O Gemma às vezes embrulha o JSON em ```json ... ``` ou em texto;
-    esta função tolera esses casos.
-    """
-    if not texto:
-        return None
-    texto = texto.strip()
-    # Remove cercas de código markdown, se houver
-    texto = re.sub(r"^```(?:json)?|```$", "", texto, flags=re.MULTILINE).strip()
-    try:
-        return json.loads(texto)
-    except json.JSONDecodeError:
-        pass
-    # Fallback: pega o primeiro {...} que aparecer
-    match = re.search(r"\{.*\}", texto, re.DOTALL)
-    if match:
-        try:
-            return json.loads(match.group(0))
-        except json.JSONDecodeError:
-            return None
-    return None
+from src.utils import extrair_json as _extrair_json
 
 
 # ── Active Recall: geração e avaliação ────────────────────────────────────────
