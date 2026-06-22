@@ -30,9 +30,4 @@ build/
 .DS_Store
 Thumbs.db
 
-
-# Outros
-
-tests/
-test.py
-test2.py
+*__pycache__/
